@@ -12,19 +12,7 @@ import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
 const pdfConvertOptions = [
 	{
 		id: 'keep;preserve',
-		text: t('workflow_pdf_converter', 'Keep original, preserve existing PDFs'),
-	},
-	{
-		id: 'keep;overwrite',
-		text: t('workflow_pdf_converter', 'Keep original, overwrite existing PDF'),
-	},
-	{
-		id: 'delete;preserve',
-		text: t('workflow_pdf_converter', 'Delete original, preserve existing PDFs'),
-	},
-	{
-		id: 'delete;overwrite',
-		text: t('workflow_pdf_converter', 'Delete original, overwrite existing PDF'),
+		text: t('workflow_kitinerary', 'Keep original, preserve existing PDFs'),
 	},
 ]
 export default {

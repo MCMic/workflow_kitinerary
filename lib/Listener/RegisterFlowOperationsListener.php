@@ -5,6 +5,7 @@ declare(strict_types=1);
  * @copyright Copyright (c) 2020 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Côme Chilliet <come.chilliet@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -23,9 +24,9 @@ declare(strict_types=1);
  *
  */
 
-namespace OCA\WorkflowPDFConverter\Listener;
+namespace OCA\WorkflowKitinerary\Listener;
 
-use OCA\WorkflowPDFConverter\Operation;
+use OCA\WorkflowKitinerary\Operation;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IServerContainer;
@@ -33,9 +34,7 @@ use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 
 class RegisterFlowOperationsListener implements IEventListener {
-
-	/** @var IServerContainer */
-	private $container;
+	private IServerContainer $container;
 
 	public function __construct(IServerContainer $container) {
 		$this->container = $container;
@@ -46,6 +45,6 @@ class RegisterFlowOperationsListener implements IEventListener {
 			return;
 		}
 		$event->registerOperation($this->container->get(Operation::class));
-		Util::addScript('workflow_pdf_converter', 'workflow_pdf_converter-main');
+		Util::addScript('workflow_kitinerary', 'workflow_kitinerary-main');
 	}
 }

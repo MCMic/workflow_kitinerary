@@ -1,28 +1,24 @@
 <?xml version="1.0"?>
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
 	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
-	<id>workflow_pdf_converter</id>
-	<name>Automated PDF conversion</name>
-	<summary>Rule based conversion of Documents into the PDF format</summary>
-	<description>An app to trigger automatic conversion of documents to PDF. Based on admin defined rules, a background job file be set up when a matching file was created or written, or was assigned a tag. Then, LibreOffice is being utilized for converting the document.</description>
-	<version>1.10.0</version>
+	<id>workflow_kitinerary</id>
+	<name>Automated kitinerary parsing</name>
+	<summary>Use kitinerary to parse travel documents into the calendar</summary>
+	<description>An app to trigger automatic conversion of travel documents to calendar events. It uses kitinerary to extract the information and is compatible with the KDE itinerary mobile application.</description>
+	<version>0.1</version>
 	<licence>agpl</licence>
-	<author mail="coding@schilljs.com">Joas Schilling</author>
-	<author mail="blizzz@arthur-schiwon.de">Arthur Schiwon</author>
-	<namespace>WorkflowPDFConverter</namespace>
+	<author mail="come.chilliet@nextcloud.com">Côme Chilliet</author>
+	<namespace>WorkflowKitinerary</namespace>
 	<types>
 		<filesystem/>
 	</types>
 	<category>files</category>
 	<category>tools</category>
-	<category>organization</category>
 	<category>workflow</category>
-	<website>https://github.com/nextcloud/workflow_pdf_converter</website>
-	<bugs>https://github.com/nextcloud/workflow_pdf_converter/issues</bugs>
-	<repository type="git">https://github.com/nextcloud/workflow_pdf_converter.git</repository>
-	<screenshot>https://raw.githubusercontent.com/nextcloud/workflow_pdf_converter/master/screenshots/flow-settings-ui.png</screenshot>
-	<screenshot small-thumbnail="https://raw.githubusercontent.com/nextcloud/workflow_pdf_converter/master/screenshots/management-apps_small.png">https://raw.githubusercontent.com/nextcloud/workflow_pdf_converter/master/screenshots/management-apps.png</screenshot>
+	<website>https://github.com/mcmic/workflow_kitinerary</website>
+	<bugs>https://github.com/mcmic/workflow_kitinerary/issues</bugs>
+	<repository type="git">https://github.com/mcmic/workflow_kitinerary.git</repository>
 	<dependencies>
-		<nextcloud min-version="25" max-version="25" />
+		<nextcloud min-version="24" max-version="25" />
 	</dependencies>
 </info>

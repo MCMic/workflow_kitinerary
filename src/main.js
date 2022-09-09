@@ -1,8 +1,8 @@
-import ConvertToPdf from './ConvertToPdf'
+import WorkflowKitinerary from './WorkflowKitinerary'
 
 OCA.WorkflowEngine.registerOperator({
-	id: 'OCA\\WorkflowPDFConverter\\Operation',
+	id: 'OCA\\WorkflowKitinerary\\Operation',
 	operation: 'keep;preserve',
-	options: ConvertToPdf,
+	options: WorkflowKitinerary,
 	color: '#dc5047',
 })

@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2018 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Côme Chilliet <come.chilliet@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,9 +22,9 @@
  *
  */
 
-namespace OCA\WorkflowPDFConverter\AppInfo;
+namespace OCA\WorkflowKitinerary\AppInfo;
 
-use OCA\WorkflowPDFConverter\Listener\RegisterFlowOperationsListener;
+use OCA\WorkflowKitinerary\Listener\RegisterFlowOperationsListener;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
@@ -32,7 +33,7 @@ use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 
 class Application extends App implements IBootstrap {
 	public function __construct() {
-		parent::__construct('workflow_pdf_converter');
+		parent::__construct('workflow_kitinerary');
 	}
 
 	public function register(IRegistrationContext $context): void {

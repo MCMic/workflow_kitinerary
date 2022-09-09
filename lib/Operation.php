@@ -3,6 +3,7 @@
  * @copyright Copyright (c) 2018 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
  * @author Arthur Schiwon <blizzz@arthur-schiwon.de>
+ * @author Côme Chilliet <come.chilliet@nextcloud.com>
  *
  * @license GNU AGPL version 3 or any later version
  *
@@ -21,15 +22,17 @@
  *
  */
 
-namespace OCA\WorkflowPDFConverter;
+namespace OCA\WorkflowKitinerary;
 
+use ChristophWurst\KItinerary\Bin\BinaryAdapter;
+use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
+use ChristophWurst\KItinerary\ItineraryExtractor;
 use OCA\WorkflowEngine\Entity\File;
-use OCA\WorkflowPDFConverter\BackgroundJobs\Convert;
-use OCP\BackgroundJob\IJobList;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
 use OCP\Files\Folder;
 use OCP\Files\Node;
+use OCP\Files\NotFoundException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\WorkflowEngine\IRuleMatcher;
@@ -38,21 +41,16 @@ use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
 	public const MODES = [
-		'keep;preserve',
-		'keep;overwrite',
-		'delete;preserve',
-		'delete;overwrite',
+		'woot',
 	];
 
-	/** @var IJobList */
-	private $jobList;
-	/** @var IL10N */
-	private $l;
-	/** @var IURLGenerator */
-	private $urlGenerator;
+	private IL10N $l;
+	private IURLGenerator $urlGenerator;
 
-	public function __construct(IJobList $jobList, IL10N $l, IURLGenerator $urlGenerator) {
-		$this->jobList = $jobList;
+	public function __construct(
+		IL10N $l,
+		IURLGenerator $urlGenerator
+	) {
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
 	}
@@ -64,15 +62,15 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function getDisplayName(): string {
-		return $this->l->t('PDF conversion');
+		return $this->l->t('Kitinerary');
 	}
 
 	public function getDescription(): string {
-		return $this->l->t('Convert documents into the PDF format on upload and write.');
+		return $this->l->t('Convert travel documents into calendar events and inserts them in a calendar.');
 	}
 
 	public function getIcon(): string {
-		return $this->urlGenerator->imagePath('workflow_pdf_converter', 'app.svg');
+		return $this->urlGenerator->imagePath('workflow_kitinerary', 'app.svg');
 	}
 
 	public function isAvailableForScope(int $scope): bool {
@@ -83,54 +81,50 @@ class Operation implements ISpecificOperation {
 		if (!$event instanceof GenericEvent) {
 			return;
 		}
-		try {
-			if ($eventName === '\OCP\Files::postRename') {
-				/** @var Node $oldNode */
-				[, $node] = $event->getSubject();
-			} else {
-				$node = $event->getSubject();
-			}
-			/** @var Node $node */
-
-			// '', admin, 'files', 'path/to/file.txt'
-			[,, $folder,] = explode('/', $node->getPath(), 4);
-			if ($folder !== 'files' || $node instanceof Folder) {
-				return;
-			}
-
-			// avoid converting pdfs into pdfs - would become infinite
-			// also some types we know would not succeed
-			if ($node->getMimetype() === 'application/pdf'
-				|| $node->getMimePart() === 'video'
-				|| $node->getMimePart() === 'audio'
-			) {
-				return;
-			}
-
-			$matches = $ruleMatcher->getFlows(false);
-			$originalFileMode = $targetPdfMode = null;
-			foreach ($matches as $match) {
-				$fileModes = explode(';', $match['operation']);
-				if ($originalFileMode !== 'keep') {
-					$originalFileMode = $fileModes[0];
-				}
-				if ($targetPdfMode !== 'preserve') {
-					$targetPdfMode = $fileModes[1];
-				}
-				if ($originalFileMode === 'keep' && $targetPdfMode === 'preserve') {
-					// most conservative setting, no need to look into other modes
-					break;
-				}
-			}
-			if (!empty($originalFileMode) && !empty($targetPdfMode)) {
-				$this->jobList->add(Convert::class, [
-					'path' => $node->getPath(),
-					'originalFileMode' => $originalFileMode,
-					'targetPdfMode' => $targetPdfMode,
-				]);
-			}
-		} catch (\OCP\Files\NotFoundException $e) {
+		//~ try {
+		if ($eventName === '\OCP\Files::postRename') {
+			[, $node] = $event->getSubject();
+		} else {
+			$node = $event->getSubject();
 		}
+		/** @var Node $node */
+
+		// '', admin, 'files', 'path/to/file.txt'
+		[,, $folder,] = explode('/', $node->getPath(), 4);
+		if ($folder !== 'files' || $node instanceof Folder) {
+			return;
+		}
+
+		// woot?
+		/*$matches = $ruleMatcher->getFlows(false);
+		$originalFileMode = $targetPdfMode = null;
+		foreach ($matches as $match) {
+			$fileModes = explode(';', $match['operation']);
+			if ($originalFileMode !== 'keep') {
+				$originalFileMode = $fileModes[0];
+			}
+			if ($targetPdfMode !== 'preserve') {
+				$targetPdfMode = $fileModes[1];
+			}
+			if ($originalFileMode === 'keep' && $targetPdfMode === 'preserve') {
+				// most conservative setting, no need to look into other modes
+				break;
+			}
+		}*/
+		//~ if (!empty($originalFileMode) && !empty($targetPdfMode)) {
+		//~ TODO extraire le ics et l’insérer dans un calendrier
+		//~ 'path' => $node->getPath(),
+		$adapter = new BinaryAdapter();
+		if (!$adapter->isAvailable()) {
+			throw new Exception('not available');
+		}
+		//~ $extractor = new ItineraryExtractor($adapter);
+
+		$itinerary = $adapter->extractFromString($node->getContent());
+		//~ }
+		//~ } catch (KItineraryRuntimeException $e) {
+		//~ } catch (NotFoundException $e) {
+		//~ }
 	}
 
 	public function getEntityId(): string {

@@ -1,8 +1,8 @@
 {
-	"name": "workflow_pdf_converter",
-	"description": "Workflow for converting to pdf",
-	"version": "1.10.0",
-	"author": "Julius Härtl <jus@bitgrid.net>",
+	"name": "workflow_kitinerary",
+	"description": "Workflow for using kitinerary to parse travel documents into the calendar",
+	"version": "0.1",
+	"author": "Côme Chilliet <come.chilliet@nextcloud.com>",
 	"license": "agpl",
 	"private": true,
 	"scripts": {
