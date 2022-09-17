@@ -29,14 +29,14 @@ namespace OCA\WorkflowKitinerary\Listener;
 use OCA\WorkflowKitinerary\Operation;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IServerContainer;
 use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
+￼use Psr\Container\ContainerInterface;
 
 class RegisterFlowOperationsListener implements IEventListener {
-	private IServerContainer $container;
+	private ContainerInterface $container;
 
-	public function __construct(IServerContainer $container) {
+	public function __construct(ContainerInterface $container) {
 		$this->container = $container;
 	}
 
