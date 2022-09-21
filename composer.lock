@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a27b7a5829e92c553d312def7300cd62",
+    "content-hash": "b6f138d999ab74606a735ebc040619ec",
     "packages": [
         {
             "name": "christophwurst/kitinerary",
-            "version": "0.1.0",
+            "version": "0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary.git",
-                "reference": "af361b09dc37c4c67425a8b80357b350620c51fb"
+                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/af361b09dc37c4c67425a8b80357b350620c51fb",
-                "reference": "af361b09dc37c4c67425a8b80357b350620c51fb",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
+                "reference": "d2adb02b6d46b36571dc3c5127a8360ba2d5b418",
                 "shasum": ""
             },
             "require": {
@@ -42,26 +42,26 @@
             "description": "KItinerary adapter",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary/tree/master"
+                "source": "https://github.com/ChristophWurst/kitinerary/tree/0.2.1"
             },
-            "time": "2019-11-18T10:44:57+00:00"
+            "time": "2020-01-13T21:39:22+00:00"
         },
         {
             "name": "christophwurst/kitinerary-bin",
-            "version": "0.1.6",
+            "version": "0.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-bin.git",
-                "reference": "3ed704a2ad501be248bb42a1b1283c5c7fc831f9"
+                "reference": "eaafa040b404651cb4ab75a2d7a53c71b55d2395"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/3ed704a2ad501be248bb42a1b1283c5c7fc831f9",
-                "reference": "3ed704a2ad501be248bb42a1b1283c5c7fc831f9",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/eaafa040b404651cb4ab75a2d7a53c71b55d2395",
+                "reference": "eaafa040b404651cb4ab75a2d7a53c71b55d2395",
                 "shasum": ""
             },
             "require": {
-                "christophwurst/kitinerary": "^0.1.0",
+                "christophwurst/kitinerary": "^0.2.1",
                 "ext-json": "*",
                 "php": "^7.1",
                 "psr/log": "^1.1"
@@ -85,9 +85,93 @@
             "description": "KItinerary binary executable",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-bin/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-bin/tree/0.1.6"
+                "source": "https://github.com/ChristophWurst/kitinerary-bin/tree/0.2.3"
             },
-            "time": "2019-12-03T08:40:34+00:00"
+            "time": "2020-01-13T21:43:49+00:00"
+        },
+        {
+            "name": "christophwurst/kitinerary-flatpak",
+            "version": "0.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
+                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/2f0254f31a6b3d88f7a8ac5de25c580820401d37",
+                "reference": "2f0254f31a6b3d88f7a8ac5de25c580820401d37",
+                "shasum": ""
+            },
+            "require": {
+                "christophwurst/kitinerary": "^0.2",
+                "ext-json": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ChristophWurst\\KItinerary\\Flatpak\\": "/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "AGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Wurst",
+                    "email": "christoph@winzerhof-wurst.at"
+                }
+            ],
+            "description": "KItinerary Flatpak binding",
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary-flatpak/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/0.2.2"
+            },
+            "time": "2020-01-13T21:42:51+00:00"
+        },
+        {
+            "name": "christophwurst/kitinerary-sys",
+            "version": "v0.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ChristophWurst/kitinerary-sys.git",
+                "reference": "db1c61703e94746b95543f14c5a09067faba6f92"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/db1c61703e94746b95543f14c5a09067faba6f92",
+                "reference": "db1c61703e94746b95543f14c5a09067faba6f92",
+                "shasum": ""
+            },
+            "require": {
+                "christophwurst/kitinerary": "^0.2.1",
+                "ext-json": "*",
+                "php": "^7.1",
+                "psr/log": "^1.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ChristophWurst\\KItinerary\\Sys\\": "/src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Christoph Wurst",
+                    "email": "christoph@winzerhof-wurst.at"
+                }
+            ],
+            "description": "KItinerary binding for the system package",
+            "support": {
+                "issues": "https://github.com/ChristophWurst/kitinerary-sys/issues",
+                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.1.0"
+            },
+            "time": "2020-05-15T14:29:54+00:00"
         },
         {
             "name": "psr/log",
@@ -2292,5 +2376,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "7.4"
+    },
     "plugin-api-version": "2.3.0"
 }
