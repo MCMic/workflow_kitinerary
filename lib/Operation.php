@@ -26,7 +26,8 @@ namespace OCA\WorkflowKitinerary;
 
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
-use ChristophWurst\KItinerary\ItineraryExtractor;
+use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
+use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCP\EventDispatcher\Event;
@@ -38,8 +39,8 @@ use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
-use UnexpectedValueException;
 use Psr\Log\LoggerInterface;
+use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
 	public const MODES = [
@@ -53,11 +54,32 @@ class Operation implements ISpecificOperation {
 	public function __construct(
 		IL10N $l,
 		IURLGenerator $urlGenerator,
+		BinaryAdapter $binAdapter,
+		FlatpakAdapter $flatpakAdapter,
+		SysAdapter $sysAdapter,
 		LoggerInterface $logger
 	) {
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
+		$this->binAdapter = $binAdapter;
+		$this->flatpakAdapter = $flatpakAdapter;
+		$this->sysAdapter = $sysAdapter;
 		$this->logger = $logger;
+	}
+
+	private function findAvailableAdapter(): Adapter {
+		if ($this->sysAdapter->isAvailable()) {
+			$this->sysAdapter->setLogger($this->logger);
+			return $this->sysAdapter;
+		}
+		if ($this->binAdapter->isAvailable()) {
+			$this->binAdapter->setLogger($this->logger);
+			return $this->binAdapter;
+		}
+		if ($this->flatpakAdapter->isAvailable()) {
+			return $this->flatpakAdapter;
+		}
+		throw new \Exception('No kitinerary adapter is available');
 	}
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
@@ -119,12 +141,7 @@ class Operation implements ISpecificOperation {
 		//~ if (!empty($originalFileMode) && !empty($targetPdfMode)) {
 		//~ TODO extraire le ics et l’insérer dans un calendrier
 		//~ 'path' => $node->getPath(),
-		$adapter = new BinaryAdapter();
-		$adapter->setLogger($this->logger);
-		if (!$adapter->isAvailable()) {
-			throw new \Exception('not available');
-		}
-		//~ $extractor = new ItineraryExtractor($adapter);
+		$adapter = $this->findAvailableAdapter();
 
 		$itinerary = $adapter->extractFromString($node->getContent());
 

@@ -10,7 +10,9 @@
 	},
 	"require": {
 		"christophwurst/kitinerary": "^0.2",
-		"christophwurst/kitinerary-bin": "^0.2"
+		"christophwurst/kitinerary-bin": "^0.2",
+		"christophwurst/kitinerary-flatpak": "^0.2",
+		"christophwurst/kitinerary-sys": "^0.1.0"
 	},
 	"config": {
 		"platform": {
