@@ -31,9 +31,13 @@ use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 
+include_once __DIR__ . '/../../vendor/autoload.php';
+
 class Application extends App implements IBootstrap {
+	public const APP_ID = 'workflow_kitinerary';
+
 	public function __construct() {
-		parent::__construct('workflow_kitinerary');
+		parent::__construct(self::APP_ID);
 	}
 
 	public function register(IRegistrationContext $context): void {

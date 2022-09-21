@@ -9,7 +9,8 @@
 		"christophwurst/nextcloud": "^24.0"
 	},
 	"require": {
-		"christophwurst/kitinerary-bin": "^0.1.3"
+		"christophwurst/kitinerary": "^0.2",
+		"christophwurst/kitinerary-bin": "^0.2"
 	},
 	"config": {
 		"platform": {

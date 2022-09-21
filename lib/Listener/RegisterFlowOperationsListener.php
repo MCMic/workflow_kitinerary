@@ -26,6 +26,7 @@ declare(strict_types=1);
 
 namespace OCA\WorkflowKitinerary\Listener;
 
+use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCA\WorkflowKitinerary\Operation;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
@@ -45,6 +46,6 @@ class RegisterFlowOperationsListener implements IEventListener {
 			return;
 		}
 		$event->registerOperation($this->container->get(Operation::class));
-		Util::addScript('workflow_kitinerary', 'workflow_kitinerary-main');
+		Util::addScript(Application::APP_ID, 'workflow_kitinerary-main');
 	}
 }

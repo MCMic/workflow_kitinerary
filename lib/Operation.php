@@ -28,6 +28,7 @@ use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
 use ChristophWurst\KItinerary\ItineraryExtractor;
 use OCA\WorkflowEngine\Entity\File;
+use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
 use OCP\Files\Folder;
@@ -70,7 +71,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function getIcon(): string {
-		return $this->urlGenerator->imagePath('workflow_kitinerary', 'app.svg');
+		return $this->urlGenerator->imagePath(Application::APP_ID, 'app.svg');
 	}
 
 	public function isAvailableForScope(int $scope): bool {
