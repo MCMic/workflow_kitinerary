@@ -121,6 +121,7 @@ class Operation implements ISpecificOperation {
 		//~ $extractor = new ItineraryExtractor($adapter);
 
 		$itinerary = $adapter->extractFromString($node->getContent());
+		\OC::$server->get(\Psr\Log\LoggerInterface::class)->info($itinerary);
 		//~ }
 		//~ } catch (KItineraryRuntimeException $e) {
 		//~ } catch (NotFoundException $e) {
