@@ -24,6 +24,7 @@
 
 namespace OCA\WorkflowKitinerary;
 
+use ChristophWurst\KItinerary\Adapter;
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
