@@ -142,6 +142,7 @@ class Operation implements ISpecificOperation {
 		//~ TODO extraire le ics et l’insérer dans un calendrier
 		//~ 'path' => $node->getPath(),
 		$adapter = $this->findAvailableAdapter();
+		$this->logger->debug('Using adapter '.get_class($adapter));
 
 		$itinerary = $adapter->extractFromString($node->getContent());
 
