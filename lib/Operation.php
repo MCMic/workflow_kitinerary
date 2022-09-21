@@ -39,6 +39,7 @@ use OCP\IURLGenerator;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use UnexpectedValueException;
+use Psr\Log\LoggerInterface;
 
 class Operation implements ISpecificOperation {
 	public const MODES = [
@@ -47,13 +48,16 @@ class Operation implements ISpecificOperation {
 
 	private IL10N $l;
 	private IURLGenerator $urlGenerator;
+	private LoggerInterface $logger;
 
 	public function __construct(
 		IL10N $l,
-		IURLGenerator $urlGenerator
+		IURLGenerator $urlGenerator,
+		LoggerInterface $logger
 	) {
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
+		$this->logger = $logger;
 	}
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
@@ -116,13 +120,17 @@ class Operation implements ISpecificOperation {
 		//~ TODO extraire le ics et l’insérer dans un calendrier
 		//~ 'path' => $node->getPath(),
 		$adapter = new BinaryAdapter();
+		$adapter->setLogger($this->logger);
 		if (!$adapter->isAvailable()) {
-			throw new Exception('not available');
+			throw new \Exception('not available');
 		}
 		//~ $extractor = new ItineraryExtractor($adapter);
 
 		$itinerary = $adapter->extractFromString($node->getContent());
-		\OC::$server->get(\Psr\Log\LoggerInterface::class)->info($itinerary);
+
+		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
+		throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
+// 		\OC::$server->get(\Psr\Log\LoggerInterface::class)->error(print_r($itinerary, true));
 		//~ }
 		//~ } catch (KItineraryRuntimeException $e) {
 		//~ } catch (NotFoundException $e) {
