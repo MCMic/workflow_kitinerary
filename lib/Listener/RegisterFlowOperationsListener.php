@@ -31,7 +31,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
-￼use Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 class RegisterFlowOperationsListener implements IEventListener {
 	private ContainerInterface $container;
