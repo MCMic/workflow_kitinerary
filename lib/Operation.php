@@ -149,7 +149,6 @@ class Operation implements ISpecificOperation {
 
 		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
 		throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
-// 		\OC::$server->get(\Psr\Log\LoggerInterface::class)->error(print_r($itinerary, true));
 		//~ }
 		//~ } catch (KItineraryRuntimeException $e) {
 		//~ } catch (NotFoundException $e) {
