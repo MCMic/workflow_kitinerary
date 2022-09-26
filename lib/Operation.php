@@ -31,6 +31,7 @@ use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File;
 use OCA\WorkflowKitinerary\AppInfo\Application;
+use OCP\Calendar\IManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
 use OCP\Files\Folder;
@@ -38,6 +39,7 @@ use OCP\Files\Node;
 use OCP\Files\NotFoundException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\IUserSession;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -51,6 +53,8 @@ class Operation implements ISpecificOperation {
 	private IL10N $l;
 	private IURLGenerator $urlGenerator;
 	private LoggerInterface $logger;
+	private IManager $calendarManager;
+	private IUserSession $userSession;
 
 	public function __construct(
 		IL10N $l,
@@ -58,7 +62,9 @@ class Operation implements ISpecificOperation {
 		BinaryAdapter $binAdapter,
 		FlatpakAdapter $flatpakAdapter,
 		SysAdapter $sysAdapter,
-		LoggerInterface $logger
+		LoggerInterface $logger,
+		IManager $calendarManager,
+		IUserSession $userSession
 	) {
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
@@ -66,6 +72,8 @@ class Operation implements ISpecificOperation {
 		$this->flatpakAdapter = $flatpakAdapter;
 		$this->sysAdapter = $sysAdapter;
 		$this->logger = $logger;
+		$this->calendarManager = $calendarManager;
+		$this->userSession = $userSession;
 	}
 
 	private function findAvailableAdapter(): Adapter {
@@ -144,15 +152,41 @@ class Operation implements ISpecificOperation {
 		//~ 'path' => $node->getPath(),
 		$adapter = $this->findAvailableAdapter();
 		$this->logger->debug('Using adapter '.get_class($adapter));
+		$this->logger->error('Using adapter '.get_class($adapter));
 
-		$itinerary = $adapter->extractFromString($node->getContent());
+		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
 		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
-		throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
+		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
+
+		$this->insertIcalEvent($itinerary);
 		//~ }
 		//~ } catch (KItineraryRuntimeException $e) {
 		//~ } catch (NotFoundException $e) {
 		//~ }
+	}
+
+	private function computePrincipalUri(IUser $user): string {
+		return 'principals/users/' . $user->getUID();
+	}
+
+	private function insertIcalEvent(string $icalEvent): string {
+		// TODO add configuration for which calendar to use
+		// TODO get the user that added the workflow, not the one that uploaded the file
+		$user = $this->userSession->getUser();
+		$calendar = current($this->calendarManager->getCalendarsForPrincipal($this->computePrincipalUri($user)));
+		if (!$calendar || !($calendar instanceof ICreateFromString)) {
+			throw new RuntimeException('Could not find a public writable calendar for this principal');
+		}
+
+		// TODO use filename from file
+		$filename = $this->random->generate(32, ISecureRandom::CHAR_ALPHANUMERIC);
+
+		try {
+			$calendar->createFromString($filename . '.ics', $icalEvent);
+		} catch (CalendarException $e) {
+			throw new RuntimeException('Could not write event  for appointment config id ' . $config->getId(). ' to calendar: ' . $e->getMessage(), 0, $e);
+		}
 	}
 
 	public function getEntityId(): string {
