@@ -28,12 +28,13 @@ namespace OCA\WorkflowKitinerary\Listener;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCA\WorkflowKitinerary\Operation;
+use OCP\AppFramework\Services\IInitialState;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
+use OCP\IUserSession;
 use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 use Psr\Container\ContainerInterface;
-use OCP\AppFramework\Services\IInitialState;
 
 class RegisterFlowOperationsListener implements IEventListener {
 	private ContainerInterface $container;

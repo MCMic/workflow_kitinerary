@@ -28,7 +28,7 @@ export default {
 	},
 	computed: {
 		values() {
-			return Object.keys(this.options).foreach(id => {
+			return Object.keys(this.options).forEach(id => {
 				return {
 					id,
 					text: this.options[id],
