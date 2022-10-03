@@ -2,7 +2,7 @@ import WorkflowKitinerary from './WorkflowKitinerary'
 
 OCA.WorkflowEngine.registerOperator({
 	id: 'OCA\\WorkflowKitinerary\\Operation',
-	operation: 'keep;preserve',
+	operation: '',
 	options: WorkflowKitinerary,
 	color: '#dc5047',
 })

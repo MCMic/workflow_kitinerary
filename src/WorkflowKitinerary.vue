@@ -1,41 +1,39 @@
 <template>
-	<Multiselect :value="currentValue"
-		:options="options"
+	<NcMultiselect
+		v-model="currentValue"
+		:options="values"
 		track-by="id"
 		label="text"
 		@input="(newValue) => newValue !== null && $emit('input', newValue.id)" />
 </template>
 
 <script>
-import Multiselect from '@nextcloud/vue/dist/Components/Multiselect'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import { loadState } from '@nextcloud/initial-state'
 
-const pdfConvertOptions = [
-	{
-		id: 'keep;preserve',
-		text: t('workflow_kitinerary', 'Keep original, preserve existing PDFs'),
-	},
-]
 export default {
-	name: 'ConvertToPdf',
-	components: { Multiselect },
+	name: 'WorkflowKitinerary',
+	components: { NcMultiselect },
 	props: {
 		value: {
-			default: pdfConvertOptions[0],
+			default: '',
 			type: String,
 		},
 	},
 	data() {
 		return {
-			options: pdfConvertOptions,
+			options: loadState('workflow_kitinerary', 'userCalendars'),
+			currentValue: null,
 		}
 	},
 	computed: {
-		currentValue() {
-			const newValue = pdfConvertOptions.find(option => option.id === this.value)
-			if (typeof newValue === 'undefined') {
-				return pdfConvertOptions[0]
-			}
-			return newValue
+		values() {
+			return Object.keys(this.options).foreach(id => {
+				return {
+					id,
+					text: this.options[id],
+				}
+			})
 		},
 	},
 }

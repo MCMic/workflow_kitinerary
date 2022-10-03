@@ -33,12 +33,21 @@ use OCP\EventDispatcher\IEventListener;
 use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 use Psr\Container\ContainerInterface;
+use OCP\AppFramework\Services\IInitialState;
 
 class RegisterFlowOperationsListener implements IEventListener {
 	private ContainerInterface $container;
+	private IUserSession $userSession;
+	private IInitialState $initialState;
 
-	public function __construct(ContainerInterface $container) {
+	public function __construct(
+		ContainerInterface $container,
+		IUserSession $userSession,
+		IInitialState $initialState
+	) {
 		$this->container = $container;
+		$this->userSession = $userSession;
+		$this->initialState = $initialState;
 	}
 
 	public function handle(Event $event): void {
@@ -46,6 +55,9 @@ class RegisterFlowOperationsListener implements IEventListener {
 			return;
 		}
 		$event->registerOperation($this->container->get(Operation::class));
-		Util::addScript(Application::APP_ID, 'workflow_kitinerary-main');
+
+		$this->initialState->provideInitialState('userCalendars', ['id1' => 'label']);
+
+		Util::addScript(Application::APP_ID, 'workflow_kitinerary-flow');
 	}
 }
