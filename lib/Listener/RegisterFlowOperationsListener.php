@@ -29,6 +29,7 @@ namespace OCA\WorkflowKitinerary\Listener;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCA\WorkflowKitinerary\Operation;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Calendar\IManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\IUserSession;
@@ -40,15 +41,25 @@ class RegisterFlowOperationsListener implements IEventListener {
 	private ContainerInterface $container;
 	private IUserSession $userSession;
 	private IInitialState $initialState;
+	private IManager $calendarManager;
+	private ?string $userId;
 
 	public function __construct(
 		ContainerInterface $container,
 		IUserSession $userSession,
-		IInitialState $initialState
+		IInitialState $initialState,
+		IManager $calendarManager,
+		?string $userId
 	) {
 		$this->container = $container;
 		$this->userSession = $userSession;
 		$this->initialState = $initialState;
+		$this->calendarManager = $calendarManager;
+		$this->userId = $userId;
+	}
+
+	private function computePrincipalUri(string $userId): string {
+		return 'principals/users/' . $userId;
 	}
 
 	public function handle(Event $event): void {
@@ -57,6 +68,7 @@ class RegisterFlowOperationsListener implements IEventListener {
 		}
 		$event->registerOperation($this->container->get(Operation::class));
 
+		$calendars = $this->calendarManager->getCalendarsForPrincipal($this->computePrincipalUri($this->userId));
 		$this->initialState->provideInitialState('userCalendars', ['id1' => 'label']);
 
 		Util::addScript(Application::APP_ID, 'workflow_kitinerary-flow');

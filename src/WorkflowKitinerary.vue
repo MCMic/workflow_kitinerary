@@ -4,7 +4,8 @@
 		:options="values"
 		track-by="id"
 		:internal-search="true"
-		label="text" />
+		label="text"
+		@input="(newValue) => newValue !== null && $emit('input', newValue.id)" />
 </template>
 
 <script>
@@ -23,12 +24,12 @@ export default {
 	data() {
 		return {
 			options: loadState('workflow_kitinerary', 'userCalendars'),
-			currentValue: {id:'a',text:'b'},
+			currentValue: null,
 		}
 	},
 	computed: {
 		values() {
-			return Object.keys(this.options).forEach(id => {
+			return Object.keys(this.options).map(id => {
 				return {
 					id,
 					text: this.options[id],

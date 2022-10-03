@@ -31,6 +31,8 @@ use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File;
 use OCA\WorkflowKitinerary\AppInfo\Application;
+use OCP\Calendar\Exceptions\CalendarException;
+use OCP\Calendar\ICreateFromString;
 use OCP\Calendar\IManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
@@ -43,6 +45,7 @@ use OCP\IUserSession;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
+use RuntimeException;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
@@ -159,18 +162,23 @@ class Operation implements ISpecificOperation {
 		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
 		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
 
-		$this->insertIcalEvent($itinerary);
+		$matches = $ruleMatcher->getFlows();
+		$calendarId = null;
+		foreach ($matches as $match) {
+			if ($match['operation'] ?? false) {
+				$calendarId = $match['operation'];
+				break;
+			}
+		}
+
+		$this->insertIcalEvent($node->getName(), $itinerary);
 		//~ }
 		//~ } catch (KItineraryRuntimeException $e) {
 		//~ } catch (NotFoundException $e) {
 		//~ }
 	}
 
-	private function computePrincipalUri(IUser $user): string {
-		return 'principals/users/' . $user->getUID();
-	}
-
-	private function insertIcalEvent(string $icalEvent): string {
+	private function insertIcalEvent(string $fileName, string $icalEvent): void {
 		// TODO add configuration for which calendar to use
 		// TODO get the user that added the workflow, not the one that uploaded the file
 		$user = $this->userSession->getUser();
@@ -179,13 +187,10 @@ class Operation implements ISpecificOperation {
 			throw new RuntimeException('Could not find a public writable calendar for this principal');
 		}
 
-		// TODO use filename from file
-		$filename = $this->random->generate(32, ISecureRandom::CHAR_ALPHANUMERIC);
-
 		try {
-			$calendar->createFromString($filename . '.ics', $icalEvent);
+			$calendar->createFromString($fileName . '.ics', $icalEvent);
 		} catch (CalendarException $e) {
-			throw new RuntimeException('Could not write event  for appointment config id ' . $config->getId(). ' to calendar: ' . $e->getMessage(), 0, $e);
+			throw $e;
 		}
 	}
 
