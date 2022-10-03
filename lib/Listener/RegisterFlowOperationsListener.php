@@ -68,8 +68,12 @@ class RegisterFlowOperationsListener implements IEventListener {
 		}
 		$event->registerOperation($this->container->get(Operation::class));
 
+		$userCalendars = [];
 		$calendars = $this->calendarManager->getCalendarsForPrincipal($this->computePrincipalUri($this->userId));
-		$this->initialState->provideInitialState('userCalendars', ['id1' => 'label']);
+		foreach ($calendars as $calendar) {
+			$userCalendars[$calendar->getUri()] = $calendar->getDisplayName();
+		}
+		$this->initialState->provideInitialState('userCalendars', $userCalendars);
 
 		Util::addScript(Application::APP_ID, 'workflow_kitinerary-flow');
 	}

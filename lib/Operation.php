@@ -120,7 +120,7 @@ class Operation implements ISpecificOperation {
 		if (!$event instanceof GenericEvent) {
 			return;
 		}
-		//~ try {
+
 		if ($eventName === '\OCP\Files::postRename') {
 			[, $node] = $event->getSubject();
 		} else {
@@ -134,25 +134,6 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
-		// woot?
-		/*$matches = $ruleMatcher->getFlows(false);
-		$originalFileMode = $targetPdfMode = null;
-		foreach ($matches as $match) {
-			$fileModes = explode(';', $match['operation']);
-			if ($originalFileMode !== 'keep') {
-				$originalFileMode = $fileModes[0];
-			}
-			if ($targetPdfMode !== 'preserve') {
-				$targetPdfMode = $fileModes[1];
-			}
-			if ($originalFileMode === 'keep' && $targetPdfMode === 'preserve') {
-				// most conservative setting, no need to look into other modes
-				break;
-			}
-		}*/
-		//~ if (!empty($originalFileMode) && !empty($targetPdfMode)) {
-		//~ TODO extraire le ics et l’insérer dans un calendrier
-		//~ 'path' => $node->getPath(),
 		$adapter = $this->findAvailableAdapter();
 		$this->logger->debug('Using adapter '.get_class($adapter));
 		$this->logger->error('Using adapter '.get_class($adapter));
@@ -166,19 +147,15 @@ class Operation implements ISpecificOperation {
 		$calendarId = null;
 		foreach ($matches as $match) {
 			if ($match['operation'] ?? false) {
-				$calendarId = $match['operation'];
+				$calendarUri = $match['operation'];
 				break;
 			}
 		}
 
-		$this->insertIcalEvent($node->getName(), $itinerary);
-		//~ }
-		//~ } catch (KItineraryRuntimeException $e) {
-		//~ } catch (NotFoundException $e) {
-		//~ }
+		$this->insertIcalEvent($calendarUri, $node->getName(), $itinerary);
 	}
 
-	private function insertIcalEvent(string $fileName, string $icalEvent): void {
+	private function insertIcalEvent(string $calendarUri, string $fileName, string $icalEvent): void {
 		// TODO add configuration for which calendar to use
 		// TODO get the user that added the workflow, not the one that uploaded the file
 		$user = $this->userSession->getUser();
