@@ -26,7 +26,6 @@ namespace OCA\WorkflowKitinerary;
 
 use ChristophWurst\KItinerary\Adapter;
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
-use ChristophWurst\KItinerary\Exception\KItineraryRuntimeException;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File;
@@ -38,10 +37,8 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
 use OCP\Files\Folder;
 use OCP\Files\Node;
-use OCP\Files\NotFoundException;
 use OCP\IL10N;
 use OCP\IURLGenerator;
-use OCP\IUserSession;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -49,15 +46,11 @@ use RuntimeException;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
-	public const MODES = [
-		'woot',
-	];
-
 	private IL10N $l;
 	private IURLGenerator $urlGenerator;
 	private LoggerInterface $logger;
 	private IManager $calendarManager;
-	private IUserSession $userSession;
+	private ?string $userId;
 
 	public function __construct(
 		IL10N $l,
@@ -67,7 +60,7 @@ class Operation implements ISpecificOperation {
 		SysAdapter $sysAdapter,
 		LoggerInterface $logger,
 		IManager $calendarManager,
-		IUserSession $userSession
+		?string $userId
 	) {
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
@@ -76,7 +69,7 @@ class Operation implements ISpecificOperation {
 		$this->sysAdapter = $sysAdapter;
 		$this->logger = $logger;
 		$this->calendarManager = $calendarManager;
-		$this->userSession = $userSession;
+		$this->userId = $userId;
 	}
 
 	private function findAvailableAdapter(): Adapter {
@@ -95,9 +88,12 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
-		/*if (!in_array($operation, Operation::MODES)) {
-			throw new UnexpectedValueException($this->l->t('Please choose a mode.'));
-		}*/
+		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
+		$this->logger->error('Operation is '.$operation);
+		if (!isset($calendars[$operation])) {
+		$this->logger->error('Not in '.print_r($calendars, true));
+			throw new UnexpectedValueException($this->l->t('Please select a calendar.'));
+		}
 	}
 
 	public function getDisplayName(): string {
@@ -143,23 +139,18 @@ class Operation implements ISpecificOperation {
 		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
 		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
 
-		$matches = $ruleMatcher->getFlows();
-		$calendarId = null;
+		$matches = $ruleMatcher->getFlows(false);
 		foreach ($matches as $match) {
 			if ($match['operation'] ?? false) {
-				$calendarUri = $match['operation'];
+				[$userUri, $calendarUri] = json_decode($match['operation']);
+				$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
 				break;
 			}
 		}
-
-		$this->insertIcalEvent($calendarUri, $node->getName(), $itinerary);
 	}
 
-	private function insertIcalEvent(string $calendarUri, string $fileName, string $icalEvent): void {
-		// TODO add configuration for which calendar to use
-		// TODO get the user that added the workflow, not the one that uploaded the file
-		$user = $this->userSession->getUser();
-		$calendar = current($this->calendarManager->getCalendarsForPrincipal($this->computePrincipalUri($user)));
+	private function insertIcalEvent(string $userUri, string $calendarUri, string $fileName, string $icalEvent): void {
+		$calendar = current($this->calendarManager->getCalendarsForPrincipal($userUri, [$calendarUri]));
 		if (!$calendar || !($calendar instanceof ICreateFromString)) {
 			throw new RuntimeException('Could not find a public writable calendar for this principal');
 		}
@@ -169,6 +160,21 @@ class Operation implements ISpecificOperation {
 		} catch (CalendarException $e) {
 			throw $e;
 		}
+	}
+
+	private static function computePrincipalUri(string $userId): string {
+		return 'principals/users/' . $userId;
+	}
+
+	public static function listUserCalendars(IManager $calendarManager, string $userId) {
+		$userCalendars = [];
+		$userUri = self::computePrincipalUri($userId);
+		$calendars = $calendarManager->getCalendarsForPrincipal($userUri);
+		foreach ($calendars as $calendar) {
+			$value = json_encode([$userUri, $calendar->getUri()]);
+			$userCalendars[$value] = $calendar->getDisplayName();
+		}
+		return $userCalendars;
 	}
 
 	public function getEntityId(): string {
