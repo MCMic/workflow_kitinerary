@@ -145,9 +145,7 @@ class Operation implements ISpecificOperation {
 		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
 
 		$matches = $ruleMatcher->getFlows(false);
-		error_log('matches number: '.count($matches));
 		foreach ($matches as $match) {
-			error_log('MMMMMM ' . $match['operation']);
 			if ($match['operation'] ?? false) {
 				[$userUri, $calendarUri] = json_decode($match['operation']);
 				$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
@@ -157,9 +155,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	private function insertIcalEvent(string $userUri, string $calendarUri, string $fileName, string $icalEvent): void {
-		error_log('insertIcalEvent');
 		$calendar = current($this->calendarManager->getCalendarsForPrincipal($userUri, [$calendarUri]));
-		error_log('insertIcalEvent:calendar name' . $calendar->getDisplayName());
 
 		/** @var VCalendar $vCalendar */
 		$vCalendar = Reader::read($icalEvent);
@@ -169,9 +165,8 @@ class Operation implements ISpecificOperation {
 
 		$counter = 0;
 		foreach ($events as $event) {
-			error_log('ELEMENT:::' . get_class($event));
 			unset($vCalendar->VEVENT);
-			$vCalendar->add('VEVENT', $event);
+			$vCalendar->add($event);
 
 			try {
 				$calendar->createFromString($fileName . $counter++ . '.ics', $vCalendar->serialize());
