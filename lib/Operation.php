@@ -43,6 +43,9 @@ use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
+use Sabre\VObject\Component\VCalendar;
+use Sabre\VObject\Component\VEvent;
+use Sabre\VObject\Reader;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
@@ -136,11 +139,15 @@ class Operation implements ISpecificOperation {
 
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
-		$this->logger->error('Analized '.$node->getPath().' size:'.strlen($node->getContent()));
+		$this->logger->error(
+			'Analized '.$node->getPath().' size:'.strlen($node->getContent()) . ' || ' . print_r($itinerary, true)
+		);
 		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
 
 		$matches = $ruleMatcher->getFlows(false);
+		error_log('matches number: '.count($matches));
 		foreach ($matches as $match) {
+			error_log('MMMMMM ' . $match['operation']);
 			if ($match['operation'] ?? false) {
 				[$userUri, $calendarUri] = json_decode($match['operation']);
 				$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
@@ -150,15 +157,30 @@ class Operation implements ISpecificOperation {
 	}
 
 	private function insertIcalEvent(string $userUri, string $calendarUri, string $fileName, string $icalEvent): void {
+		error_log('insertIcalEvent');
 		$calendar = current($this->calendarManager->getCalendarsForPrincipal($userUri, [$calendarUri]));
+		error_log('insertIcalEvent:calendar name' . $calendar->getDisplayName());
+
+		/** @var VCalendar $vCalendar */
+		$vCalendar = Reader::read($icalEvent);
+		/** @var VEvent $vEvent */
+		$vEvent = $vCalendar->{'VEVENT'};
+		$events = $vEvent->getIterator();
+
+		$counter = 0;
+		foreach ($events as $event) {
+			error_log('ELEMENT:::' . get_class($event));
+			unset($vCalendar->VEVENT);
+			$vCalendar->add('VEVENT', $event);
+
+			try {
+				$calendar->createFromString($fileName . $counter++ . '.ics', $vCalendar->serialize());
+			} catch (CalendarException $e) {
+				throw $e;
+			}
+		}
 		if (!$calendar || !($calendar instanceof ICreateFromString)) {
 			throw new RuntimeException('Could not find a public writable calendar for this principal');
-		}
-
-		try {
-			$calendar->createFromString($fileName . '.ics', $icalEvent);
-		} catch (CalendarException $e) {
-			throw $e;
 		}
 	}
 

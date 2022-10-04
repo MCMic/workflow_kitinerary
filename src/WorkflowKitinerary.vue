@@ -5,7 +5,7 @@
 		track-by="id"
 		:internal-search="true"
 		label="text"
-		@input="(newValue) => newValue !== null && $emit('input', newValue.id)" />
+		@input="onInput" />
 </template>
 
 <script>
@@ -35,6 +35,15 @@ export default {
 					text: this.options[id],
 				}
 			})
+		},
+	},
+	methods: {
+		onInput(newValue) {
+			// when clicking on the an already selected item, we get null
+			// this avoids unselecting an item
+			if (newValue !== null) {
+				this.$emit('input', newValue.id)
+			}
 		},
 	},
 }
