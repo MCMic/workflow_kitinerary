@@ -2,14 +2,20 @@
 	"scripts": {
 		"cs:check": "php-cs-fixer fix --dry-run --diff",
 		"cs:fix": "php-cs-fixer fix",
-		"lint": "find . -name \\*.php -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l"
+		"lint": "find . -name \\*.php -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l",
+		"psalm": "psalm",
+		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
+		"psalm:update-baseline": "psalm --threads=1 --update-baseline"
+
 	},
-    "require-dev": {
+	"require-dev": {
 		"nextcloud/coding-standard": "^1.0.0",
-		"christophwurst/nextcloud": "^24.0"
+		"nextcloud/ocp": "dev-master",
+		"vimeo/psalm": "^4.27",
+		"sabre/vobject": "^4.5"
 	},
 	"require": {
-		"christophwurst/kitinerary": "^0.2",
+		"christophwurst/kitinerary": "^0.2.2",
 		"christophwurst/kitinerary-bin": "^0.2",
 		"christophwurst/kitinerary-flatpak": "^0.2",
 		"christophwurst/kitinerary-sys": "^0.1.0"
@@ -17,6 +23,11 @@
 	"config": {
 		"platform": {
 			"php":"7.4"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"OCP\\": "vendor/nextcloud/ocp/OCP"
 		}
 	}
 }

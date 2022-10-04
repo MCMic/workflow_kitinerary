@@ -28,14 +28,14 @@ use ChristophWurst\KItinerary\Adapter;
 use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
-use OCA\WorkflowEngine\Entity\File;
+use OCA\WorkflowEngine\Entity\File as FileEntity;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCP\Calendar\Exceptions\CalendarException;
 use OCP\Calendar\ICreateFromString;
 use OCP\Calendar\IManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
-use OCP\Files\Folder;
+use OCP\Files\File;
 use OCP\Files\Node;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -51,6 +51,9 @@ use UnexpectedValueException;
 class Operation implements ISpecificOperation {
 	private IL10N $l;
 	private IURLGenerator $urlGenerator;
+	private BinaryAdapter $binAdapter;
+	private FlatpakAdapter $flatpakAdapter;
+	private SysAdapter $sysAdapter;
 	private LoggerInterface $logger;
 	private IManager $calendarManager;
 	private ?string $userId;
@@ -140,7 +143,7 @@ class Operation implements ISpecificOperation {
 
 		// '', admin, 'files', 'path/to/file.txt'
 		[,, $folder,] = explode('/', $node->getPath(), 4);
-		if ($folder !== 'files' || $node instanceof Folder) {
+		if ($folder !== 'files' || !($node instanceof File)) {
 			return;
 		}
 
@@ -195,6 +198,6 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function getEntityId(): string {
-		return File::class;
+		return FileEntity::class;
 	}
 }
