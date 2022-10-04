@@ -92,9 +92,7 @@ class Operation implements ISpecificOperation {
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
 		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
-		$this->logger->error('Operation is '.$operation);
 		if (!isset($calendars[$operation])) {
-		$this->logger->error('Not in '.print_r($calendars, true));
 			throw new UnexpectedValueException($this->l->t('Please select a calendar.'));
 		}
 	}
@@ -120,6 +118,19 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
+		$matches = $ruleMatcher->getFlows(false);
+		$operations = [];
+		foreach ($matches as $match) {
+			if ($match['operation'] ?? false) {
+				// Collect settings of matching rules
+				$operations[] = json_decode($match['operation']);
+			}
+		}
+		if (empty($operations)) {
+			// No rule is matching, we were called for nothing
+			return;
+		}
+
 		if ($eventName === '\OCP\Files::postRename') {
 			[, $node] = $event->getSubject();
 		} else {
@@ -135,27 +146,20 @@ class Operation implements ISpecificOperation {
 
 		$adapter = $this->findAvailableAdapter();
 		$this->logger->debug('Using adapter '.get_class($adapter));
-		$this->logger->error('Using adapter '.get_class($adapter));
 
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
-		$this->logger->error(
-			'Analized '.$node->getPath().' size:'.strlen($node->getContent()) . ' || ' . print_r($itinerary, true)
-		);
-		// throw new \Exception('Analized '.$node->getPath().' size:'.strlen($node->getContent()).' result:'.print_r($itinerary, true));
-
 		$matches = $ruleMatcher->getFlows(false);
-		foreach ($matches as $match) {
-			if ($match['operation'] ?? false) {
-				[$userUri, $calendarUri] = json_decode($match['operation']);
-				$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
-				break;
-			}
+		foreach ($operations as [$userUri, $calendarUri]) {
+			$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
 		}
 	}
 
 	private function insertIcalEvent(string $userUri, string $calendarUri, string $fileName, string $icalEvent): void {
 		$calendar = current($this->calendarManager->getCalendarsForPrincipal($userUri, [$calendarUri]));
+		if (!$calendar || !($calendar instanceof ICreateFromString)) {
+			throw new RuntimeException('Could not find a public writable calendar for this principal');
+		}
 
 		/** @var VCalendar $vCalendar */
 		$vCalendar = Reader::read($icalEvent);
@@ -163,19 +167,15 @@ class Operation implements ISpecificOperation {
 		$vEvent = $vCalendar->{'VEVENT'};
 		$events = $vEvent->getIterator();
 
-		$counter = 0;
 		foreach ($events as $event) {
 			unset($vCalendar->VEVENT);
 			$vCalendar->add($event);
 
 			try {
-				$calendar->createFromString($fileName . $counter++ . '.ics', $vCalendar->serialize());
+				$calendar->createFromString($fileName . $event->UID . '.ics', $vCalendar->serialize());
 			} catch (CalendarException $e) {
 				throw $e;
 			}
-		}
-		if (!$calendar || !($calendar instanceof ICreateFromString)) {
-			throw new RuntimeException('Could not find a public writable calendar for this principal');
 		}
 	}
 
