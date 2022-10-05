@@ -15,7 +15,8 @@ package.json
 package-lock.json
 .php_cs.cache
 .php_cs.dist
-README.md
+.php-cs-fixer.cache
+.php-cs-fixer.dist.php
 screenshots
 src
 .stylelintrc.js
@@ -23,3 +24,5 @@ stylelint.config.js
 tests
 .tx
 webpack.js
+psalm.xml
+phpunit.xml
