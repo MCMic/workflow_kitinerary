@@ -94,6 +94,9 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
+		if ($this->userId === null) {
+			throw new UnexpectedValueException($this->l->t('No user id in session'));
+		}
 		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
 		if (!isset($calendars[$operation])) {
 			throw new UnexpectedValueException($this->l->t('Please select a calendar.'));
@@ -135,8 +138,10 @@ class Operation implements ISpecificOperation {
 		}
 
 		if ($eventName === '\OCP\Files::postRename') {
+			/** @psalm-suppress DeprecatedMethod */
 			[, $node] = $event->getSubject();
 		} else {
+			/** @psalm-suppress DeprecatedMethod */
 			$node = $event->getSubject();
 		}
 		/** @var Node $node */
@@ -152,7 +157,6 @@ class Operation implements ISpecificOperation {
 
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
-		$matches = $ruleMatcher->getFlows(false);
 		foreach ($operations as [$userUri, $calendarUri]) {
 			$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
 		}
@@ -186,13 +190,16 @@ class Operation implements ISpecificOperation {
 		return 'principals/users/' . $userId;
 	}
 
-	public static function listUserCalendars(IManager $calendarManager, string $userId) {
+	/**
+	 * @return array<string, string>
+	 */
+	public static function listUserCalendars(IManager $calendarManager, string $userId): array {
 		$userCalendars = [];
 		$userUri = self::computePrincipalUri($userId);
 		$calendars = $calendarManager->getCalendarsForPrincipal($userUri);
 		foreach ($calendars as $calendar) {
 			$value = json_encode([$userUri, $calendar->getUri()]);
-			$userCalendars[$value] = $calendar->getDisplayName();
+			$userCalendars[$value] = $calendar->getDisplayName() ?? $calendar->getUri();
 		}
 		return $userCalendars;
 	}

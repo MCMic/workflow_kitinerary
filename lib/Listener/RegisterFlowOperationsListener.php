@@ -62,6 +62,9 @@ class RegisterFlowOperationsListener implements IEventListener {
 		if (!$event instanceof RegisterOperationsEvent) {
 			return;
 		}
+		if ($this->userId === null) {
+			return;
+		}
 		$event->registerOperation($this->container->get(Operation::class));
 
 		$this->initialState->provideInitialState('userCalendars', Operation::listUserCalendars($this->calendarManager, $this->userId));
