@@ -4,5 +4,5 @@ OCA.WorkflowEngine.registerOperator({
 	id: 'OCA\\WorkflowKitinerary\\Operation',
 	operation: '',
 	options: WorkflowKitinerary,
-	color: '#dc5047',
+	color: '#4d4d4d',
 })
