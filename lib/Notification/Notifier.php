@@ -28,11 +28,7 @@ declare(strict_types=1);
 namespace OCA\WorkflowKitinerary\Notification;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
-use OCP\Files\File;
-use OCP\Files\IRootFolder;
 use OCP\IURLGenerator;
-use OCP\IUser;
-use OCP\IUserManager;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
@@ -43,7 +39,7 @@ class Notifier implements INotifier {
 
 	public function __construct(
 		IFactory $l10nFactory,
-		IURLGenerator $urlGenerator,
+		IURLGenerator $urlGenerator
 	) {
 		$this->l10nFactory = $l10nFactory;
 		$this->urlGenerator = $urlGenerator;
