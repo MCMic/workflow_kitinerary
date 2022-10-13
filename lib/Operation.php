@@ -219,7 +219,7 @@ class Operation implements ISpecificOperation {
 				'filePath' => $file->getPath(),
 				'eventId' => $eventId,
 			])
-			->setObject('import', (string)random_int(1, 10000));
+			->setObject('import', sha1($file->getName().$eventId));
 		$this->notificationManager->notify($notification);
 	}
 
