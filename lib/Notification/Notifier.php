@@ -78,8 +78,9 @@ class Notifier implements INotifier {
 				[
 					'event' => [
 						'type' => 'calendar-event',
-						'id' => $notification->getObjectId(),
+						'id' => $param['eventId'],
 						'name' => $param['summary'],
+						'link' => $this->urlGenerator->getAbsoluteURL($this->urlGenerator->linkToRoute('calendar.view.index', ['objectId' => $param['eventId']])),
 						//'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
 					],
 				])
@@ -89,7 +90,7 @@ class Notifier implements INotifier {
 				[
 					'event' => [
 						'type' => 'calendar-event',
-						'id' => $notification->getObjectId(),
+						'id' => $param['eventId'],
 						'name' => $param['summary'],
 						//'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
 					],

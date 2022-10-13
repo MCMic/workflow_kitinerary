@@ -188,7 +188,7 @@ class Operation implements ISpecificOperation {
 			try {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
-				$this->successNotication($userUri, $calendarUri, $eventFilename, $event->SUMMARY ?? $this->l->t('Unknown'), $file);
+				$this->successNotication($userUri, $calendarUri, (string)$event->UID, (string)($event->SUMMARY ?? $this->l->t('Unknown')), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -200,7 +200,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	private static function getUserIdFromPrincipalUri(string $userUri): string {
-		return explode('/', $userUri, 3)[3];
+		return explode('/', $userUri, 3)[2];
 	}
 
 	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
@@ -217,8 +217,9 @@ class Operation implements ISpecificOperation {
 				'fileId' => $file->getId(),
 				'fileName' => $file->getName(),
 				'filePath' => $file->getPath(),
+				'eventId' => $eventId,
 			])
-			->setObject('import', $eventId);
+			->setObject('import', (string)random_int(1, 10000));
 		$this->notificationManager->notify($notification);
 	}
 
