@@ -72,6 +72,12 @@ class Notifier implements INotifier {
 		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
 		$param = $notification->getSubjectParameters();
 
+		$path = $param['filePath'];
+		if (strpos($path, '/' . $notification->getUser() . '/files/') === 0) {
+			// Remove /user/files/...
+			$fullPath = $path;
+			[,,, $path] = explode('/', $fullPath, 4);
+		}
 		$notification
 			->setRichSubject(
 				$l->t('Imported {event}'),
@@ -80,33 +86,26 @@ class Notifier implements INotifier {
 						'type' => 'calendar-event',
 						'id' => $param['eventId'],
 						'name' => $param['summary'],
-						'link' => $this->urlGenerator->getAbsoluteURL($this->urlGenerator->linkToRoute('calendar.view.index', ['objectId' => $param['eventId']])),
-						//'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
+						// TODO - add link to event, but it’s complicated - https://github.com/nextcloud/server/blob/master/apps/dav/lib/CalDAV/Activity/Provider/Event.php#L84
 					],
 				])
 			->setParsedSubject(str_replace('{event}', $param['summary'], $l->t('Imported {event}')))
 			->setRichMessage(
-				$l->t('Successfully imported {event} from {file}'),
+				$l->t('Successfully imported from {file}'),
 				[
-					'event' => [
-						'type' => 'calendar-event',
-						'id' => $param['eventId'],
-						'name' => $param['summary'],
-						//'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
-					],
 					'file' => [
 						'type' => 'file',
 						'id' => $param['fileId'],
 						'name' => $param['fileName'],
-						'path' => $param['filePath'],
+						'path' => $path,
 						'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
 					],
 				])
 			->setParsedMessage(
 				str_replace(
-					['{event}', '{file}'],
-					[$param['summary'], $param['fileName']],
-					$l->t('Successfully imported {event} from {file}')
+					['{file}'],
+					[$param['fileName']],
+					$l->t('Successfully imported from {file}')
 				)
 			);
 
