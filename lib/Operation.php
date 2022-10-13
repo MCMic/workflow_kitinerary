@@ -1,4 +1,7 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * @copyright Copyright (c) 2018 Arthur Schiwon <blizzz@arthur-schiwon.de>
  *
@@ -39,6 +42,7 @@ use OCP\Files\File;
 use OCP\Files\Node;
 use OCP\IL10N;
 use OCP\IURLGenerator;
+use OCP\Notification\IManager as NotificationManager;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -56,6 +60,7 @@ class Operation implements ISpecificOperation {
 	private SysAdapter $sysAdapter;
 	private LoggerInterface $logger;
 	private IManager $calendarManager;
+	private NotificationManager $notificationManager;
 	private ?string $userId;
 
 	public function __construct(
@@ -66,6 +71,7 @@ class Operation implements ISpecificOperation {
 		SysAdapter $sysAdapter,
 		LoggerInterface $logger,
 		IManager $calendarManager,
+		NotificationManager $notificationManager,
 		?string $userId
 	) {
 		$this->l = $l;
@@ -75,6 +81,7 @@ class Operation implements ISpecificOperation {
 		$this->sysAdapter = $sysAdapter;
 		$this->logger = $logger;
 		$this->calendarManager = $calendarManager;
+		$this->notificationManager = $notificationManager;
 		$this->userId = $userId;
 	}
 
@@ -158,11 +165,11 @@ class Operation implements ISpecificOperation {
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
 		foreach ($operations as [$userUri, $calendarUri]) {
-			$this->insertIcalEvent($userUri, $calendarUri, $node->getName(), $itinerary);
+			$this->insertIcalEvent($userUri, $calendarUri, $node, $itinerary);
 		}
 	}
 
-	private function insertIcalEvent(string $userUri, string $calendarUri, string $fileName, string $icalEvent): void {
+	private function insertIcalEvent(string $userUri, string $calendarUri, File $file, string $icalEvent): void {
 		$calendar = current($this->calendarManager->getCalendarsForPrincipal($userUri, [$calendarUri]));
 		if (!$calendar || !($calendar instanceof ICreateFromString)) {
 			throw new RuntimeException('Could not find a public writable calendar for this principal');
@@ -179,7 +186,9 @@ class Operation implements ISpecificOperation {
 			$vCalendar->add($event);
 
 			try {
-				$calendar->createFromString($fileName . $event->UID . '.ics', $vCalendar->serialize());
+				$eventFilename = $file->getName() . $event->UID . '.ics';
+				$calendar->createFromString($eventFilename, $vCalendar->serialize());
+				$this->successNotication($userUri, $calendarUri, (string)$event->UID, (string)($event->SUMMARY ?? $this->l->t('Unknown')), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -188,6 +197,30 @@ class Operation implements ISpecificOperation {
 
 	private static function computePrincipalUri(string $userId): string {
 		return 'principals/users/' . $userId;
+	}
+
+	private static function getUserIdFromPrincipalUri(string $userUri): string {
+		return explode('/', $userUri, 3)[2];
+	}
+
+	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+		$userId = self::getUserIdFromPrincipalUri($userUri);
+		// Send notification to user
+		$notification = $this->notificationManager->createNotification();
+		$notification->setUser($userId)
+			->setApp(Application::APP_ID)
+			->setDateTime(new \DateTime())
+			->setSubject('importDone', [
+				'principal' => $userUri,
+				'calendar' => $calendarUri,
+				'summary' => $eventSummary,
+				'fileId' => $file->getId(),
+				'fileName' => $file->getName(),
+				'filePath' => $file->getPath(),
+				'eventId' => $eventId,
+			])
+			->setObject('import', sha1($file->getName().$eventId));
+		$this->notificationManager->notify($notification);
 	}
 
 	/**
