@@ -1,4 +1,5 @@
 { "translations": {
-    "Please select a calendar." : "カレンダーを選択してください。"
+    "Please select a calendar." : "カレンダーを選択してください。",
+    "Unknown" : "不明"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

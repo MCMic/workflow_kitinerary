@@ -1,4 +1,5 @@
 { "translations": {
-    "Please select a calendar." : "გთოხვთ აირჩიოთ კალენდარი."
+    "Please select a calendar." : "გთოხვთ აირჩიოთ კალენდარი.",
+    "Unknown" : "ამოუცნობი"
 },"pluralForm" :"nplurals=2; plural=(n!=1);"
 }

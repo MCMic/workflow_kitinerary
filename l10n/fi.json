@@ -1,4 +1,5 @@
 { "translations": {
-    "Please select a calendar." : "Valitse kalenteri"
+    "Please select a calendar." : "Valitse kalenteri",
+    "Unknown" : "Tuntematon"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

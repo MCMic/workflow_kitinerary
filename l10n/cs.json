@@ -1,0 +1,10 @@
+{ "translations": {
+    "Kitinerary" : "Kitinerary",
+    "No user id in session" : "Žádný identifikátor uživatele v relaci",
+    "Please select a calendar." : "Vyberte kalendář.",
+    "Convert travel documents into calendar events and inserts them in a calendar." : "Převádějte cestovní dokumenty na události vkládané do kalendáře.",
+    "Automated kitinerary parsing" : "Automatizované zpracovávání kitinerary",
+    "Use kitinerary to parse travel documents into the calendar" : "Použijte kitinerary pro zpracovávání cestovních dokumentů do kalendáře",
+    "An app to trigger automatic conversion of travel documents to calendar events. It uses kitinerary to extract the information and is compatible with the KDE itinerary mobile application." : "Aplikace pro spouštění automatického převodu cestovních dokumentů na události v kalendáři. Pro extrahování informací používá nástroj kitinerary a je kompatibilní s mobilní aplikací KDE itinerary."
+},"pluralForm" :"nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;"
+}
