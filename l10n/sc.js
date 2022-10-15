@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "Please select a calendar." : "Kies asb. 'n kalender.",
-    "Unknown" : "Onbekend"
+    "Unknown" : "Disconnotu"
 },
 "nplurals=2; plural=(n != 1);");

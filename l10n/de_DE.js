@@ -2,6 +2,8 @@ OC.L10N.register(
     "workflow_kitinerary",
     {
     "Kitinerary" : "Kitinerary",
+    "Imported {event}" : "Importiert {event}",
+    "Successfully imported from {file}" : "Erfolgreich importiert von {file}",
     "No user id in session" : "Keine Benutzer-ID in der Sitzung",
     "Please select a calendar." : "Bitte wählen Sie einen Kalender aus.",
     "Convert travel documents into calendar events and inserts them in a calendar." : "Wandeln Sie Reiseunterlagen in Kalenderereignisse um und fügen Sie sie in einen Kalender ein.",
