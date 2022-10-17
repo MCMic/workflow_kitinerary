@@ -115,7 +115,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	public function getDescription(): string {
-		return $this->l->t('Convert travel documents into calendar events and inserts them in a calendar.');
+		return $this->l->t('Convert travel documents into calendar events and inserts them into a calendar.');
 	}
 
 	public function getIcon(): string {
