@@ -2,6 +2,8 @@ OC.L10N.register(
     "workflow_kitinerary",
     {
     "Kitinerary" : "Kitinerary",
+    "Imported {event}" : "已匯入 {event}",
+    "Successfully imported from {file}" : "成功從 {file} 匯入",
     "No user id in session" : "工作階段中無使用者 ID",
     "Please select a calendar." : "請選取一個行事曆。",
     "Convert travel documents into calendar events and inserts them in a calendar." : "將旅行文件轉換為行事曆事件並將其插入行事曆。",
