@@ -6,7 +6,6 @@ OC.L10N.register(
     "Successfully imported from {file}" : "Úspěšně naimportováno z {file}",
     "No user id in session" : "Žádný identifikátor uživatele v relaci",
     "Please select a calendar." : "Vyberte kalendář.",
-    "Convert travel documents into calendar events and inserts them in a calendar." : "Převádějte cestovní dokumenty na události vkládané do kalendáře.",
     "Unknown" : "Neznámé",
     "Automated kitinerary parsing" : "Automatizované zpracovávání kitinerary",
     "Use kitinerary to parse travel documents into the calendar" : "Použijte kitinerary pro zpracovávání cestovních dokumentů do kalendáře",

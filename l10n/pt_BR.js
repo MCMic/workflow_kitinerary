@@ -6,7 +6,6 @@ OC.L10N.register(
     "Successfully imported from {file}" : "Importado de {file} com sucesso",
     "No user id in session" : "Não há id de usuário na sessão",
     "Please select a calendar." : "Por favor, selecione um calendário.",
-    "Convert travel documents into calendar events and inserts them in a calendar." : "Converta documentos de viagem em eventos de calendário e insere-os no calendário.",
     "Unknown" : "Desconhecido",
     "Automated kitinerary parsing" : "Processamento automatizado de kitinerário",
     "Use kitinerary to parse travel documents into the calendar" : "Use o kitinerário para processar documentos de viagem para o claendário",

@@ -2,7 +2,6 @@
     "Kitinerary" : "Kitinerary",
     "No user id in session" : "Немає ідентифікатора користувача в сеансі",
     "Please select a calendar." : "Будь ласка, виберіть календар.Будь ласка, виберіть календар.",
-    "Convert travel documents into calendar events and inserts them in a calendar." : "Перетворіть проїзні документи на події календаря та вставте їх у календар.",
     "Unknown" : "Невідомо",
     "Automated kitinerary parsing" : "Автоматизований парсинг маршруту",
     "Use kitinerary to parse travel documents into the calendar" : "Використовуйте kitinerary для аналізу проїзних документів у календарі",

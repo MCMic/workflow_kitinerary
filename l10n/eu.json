@@ -1,5 +1,7 @@
 { "translations": {
+    "Kitinerary" : "Kitinerary",
     "Please select a calendar." : "Egutegia hautatu",
-    "Unknown" : "Ezezaguna"
+    "Unknown" : "Ezezaguna",
+    "Automated kitinerary parsing" : "Kitinerary analisi automatikoa"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
