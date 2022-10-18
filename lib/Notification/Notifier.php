@@ -129,6 +129,7 @@ class Notifier implements INotifier {
 		if ($this->appManager->isEnabledForUser('calendar')) {
 			try {
 				// The calendar app needs to be manually loaded for the routes to be loaded
+				/** @psalm-suppress UndefinedClass */
 				\OC_App::loadApp('calendar');
 				$objectId = base64_encode('/remote.php/dav/calendars/' . $owner . '/' . $calendarUri . '/' . $id);
 				$link = [
