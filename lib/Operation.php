@@ -32,6 +32,7 @@ use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File as FileEntity;
+use OCA\WorkflowKitinerary\Activity\Provider as ActivityProvider;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCP\Calendar\Exceptions\CalendarException;
 use OCP\Calendar\ICreateFromString;
@@ -189,6 +190,7 @@ class Operation implements ISpecificOperation {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
+				$this->successActivity();
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -221,6 +223,29 @@ class Operation implements ISpecificOperation {
 			])
 			->setObject('import', sha1($file->getName().$eventId));
 		$this->notificationManager->notify($notification);
+	}
+
+	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+		$userId = self::getUserIdFromPrincipalUri($userUri);
+
+		$event = $this->activityManager->generateEvent();
+		$event->setAffectedUser($userId)
+			->setApp(Application::APP_ID)
+			->setType('import')
+			->setSubject(
+				ActivityProvider::SUBJECT_IMPORTED,
+				[
+					'principal' => $userUri,
+					'calendar' => $calendarUri,
+					'summary' => $eventSummary,
+					'fileId' => $file->getId(),
+					'fileName' => $file->getName(),
+					'filePath' => $file->getPath(),
+					'eventId' => $eventId,
+				]
+			)
+			->setObject();
+		$this->activityManager->publish($event);
 	}
 
 	/**
