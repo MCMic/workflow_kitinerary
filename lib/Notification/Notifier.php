@@ -28,6 +28,7 @@ declare(strict_types=1);
 namespace OCA\WorkflowKitinerary\Notification;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
+use OCP\App\IAppManager;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
@@ -36,13 +37,16 @@ use OCP\Notification\INotifier;
 class Notifier implements INotifier {
 	protected IFactory $l10nFactory;
 	protected IURLGenerator $urlGenerator;
+	protected IAppManager $appManager;
 
 	public function __construct(
 		IFactory $l10nFactory,
-		IURLGenerator $urlGenerator
+		IURLGenerator $urlGenerator,
+		IAppManager $appManager
 	) {
 		$this->l10nFactory = $l10nFactory;
 		$this->urlGenerator = $urlGenerator;
+		$this->appManager = $appManager;
 	}
 
 	public function getID(): string {
@@ -82,12 +86,12 @@ class Notifier implements INotifier {
 			->setRichSubject(
 				$l->t('Imported {event}'),
 				[
-					'event' => [
-						'type' => 'calendar-event',
-						'id' => $param['eventId'],
-						'name' => $param['summary'],
-						// TODO - add link to event, but it’s complicated - https://github.com/nextcloud/server/blob/master/apps/dav/lib/CalDAV/Activity/Provider/Event.php#L84
-					],
+					'event' => $this->generateRichObjectEvent(
+						$param['eventId'],
+						$param['summary'],
+						$notification->getUser(),
+						$param['calendar']
+					),
 				])
 			->setParsedSubject(str_replace('{event}', $param['summary'], $l->t('Imported {event}')))
 			->setRichMessage(
@@ -110,5 +114,35 @@ class Notifier implements INotifier {
 			);
 
 		return $notification;
+	}
+
+	/**
+	 * @return array<string,string>
+	 */
+	protected function generateRichObjectEvent(string $id, string $name, string $owner, string $calendarUri): array {
+		$object = [
+			'type' => 'calendar-event',
+			'id' => $id,
+			'name' => $name,
+		];
+
+		if ($this->appManager->isEnabledForUser('calendar')) {
+			try {
+				// The calendar app needs to be manually loaded for the routes to be loaded
+				\OC_App::loadApp('calendar');
+				$objectId = base64_encode('/remote.php/dav/calendars/' . $owner . '/' . $calendarUri . '/' . $id);
+				$link = [
+					'view' => 'dayGridMonth',
+					'timeRange' => 'now',
+					'mode' => 'sidebar',
+					'objectId' => $objectId,
+					'recurrenceId' => 'next'
+				];
+				$object['link'] = $this->urlGenerator->linkToRouteAbsolute('calendar.view.indexview.timerange.edit', $link);
+			} catch (\Exception $error) {
+				// Do nothing
+			}
+		}
+		return $object;
 	}
 }

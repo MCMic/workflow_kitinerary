@@ -188,7 +188,7 @@ class Operation implements ISpecificOperation {
 			try {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
-				$this->successNotication($userUri, $calendarUri, (string)$event->UID, (string)($event->SUMMARY ?? $this->l->t('Unknown')), $file);
+				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
