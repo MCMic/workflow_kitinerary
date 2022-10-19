@@ -34,7 +34,6 @@ use OCP\Activity\IEvent;
 use OCP\Activity\IEventMerger;
 use OCP\Activity\IManager;
 use OCP\Activity\IProvider;
-use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 
@@ -74,42 +73,17 @@ class Provider implements IProvider {
 		$l = $this->languageFactory->get(Application::APP_ID, $language);
 
 		if ($this->activityManager->isFormattingFilteredObject()) {
-			return $this->parseShortVersion($l, $event);
-		}
-
-		return $this->parseLongVersion($l, $event, $previousEvent);
-	}
-
-	/**
-	 * @throws \InvalidArgumentException
-	 */
-	private function parseShortVersion(IL10N $l, IEvent $event): IEvent {
-		if ($event->getSubject() === self::SUBJECT_IMPORTED) {
 			$subject = $l->t('Imported {event}');
-			// TODO use appropriate icon
-			if ($this->activityManager->getRequirePNG()) {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/starred.png')));
-			} else {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/starred.svg')));
-			}
 		} else {
-			throw new \InvalidArgumentException();
+			$subject = $l->t('Imported {event} from {file}');
 		}
 
-		$this->setSubjects($event, $subject);
-		return $event;
-	}
-
-	/**
-	 * @throws \InvalidArgumentException
-	 */
-	private function parseLongVersion(IL10N $l, IEvent $event, ?IEvent $previousEvent = null): IEvent {
 		if ($event->getSubject() === self::SUBJECT_IMPORTED) {
-			$subject = $l->t('Imported {event} from {file}');
+			// TODO Change icon depending on ticket?
 			if ($this->activityManager->getRequirePNG()) {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/starred.png')));
+				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'longdistancetrain.png')));
 			} else {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath('core', 'actions/starred.svg')));
+				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'longdistancetrain.svg')));
 			}
 		} else {
 			throw new \InvalidArgumentException();
@@ -117,6 +91,7 @@ class Provider implements IProvider {
 
 		$this->setSubjects($event, $subject);
 		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
+
 		return $event;
 	}
 
