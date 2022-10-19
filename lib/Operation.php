@@ -140,9 +140,10 @@ class Operation implements ISpecificOperation {
 		$matches = $ruleMatcher->getFlows(false);
 		$operations = [];
 		foreach ($matches as $match) {
-			if ($match['operation'] ?? false) {
+			$operation = $match['operation'] ?? false;
+			if ($operation) {
 				// Collect settings of matching rules
-				$operations[] = json_decode($match['operation']);
+				$operations[] = json_decode($operation);
 			}
 		}
 		if (empty($operations)) {
