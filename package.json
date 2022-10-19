@@ -1,7 +1,7 @@
 {
 	"name": "workflow_kitinerary",
 	"description": "Workflow for using kitinerary to parse travel documents into the calendar",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"author": "Côme Chilliet <come.chilliet@nextcloud.com>",
 	"license": "agpl",
 	"private": true,

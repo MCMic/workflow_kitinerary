@@ -1,3 +1,7 @@
+# v1.0.3
+
+* Fix .nextcloudignore removing dependencies code from release
+
 # v1.0.2
 
 * Bump version number
