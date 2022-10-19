@@ -33,7 +33,7 @@ class KitineraryImport extends KitineraryActivitySettings {
 	 * @return string Lowercase a-z and underscore only identifier
 	 * @since 11.0.0
 	 */
-	public function getIdentifier() {
+	public function getIdentifier(): string {
 		return 'import';
 	}
 
@@ -41,7 +41,7 @@ class KitineraryImport extends KitineraryActivitySettings {
 	 * @return string A translated string
 	 * @since 11.0.0
 	 */
-	public function getName() {
+	public function getName(): string {
 		return $this->l->t('An <strong>event</strong> has been imported from a file');
 	}
 
@@ -51,7 +51,7 @@ class KitineraryImport extends KitineraryActivitySettings {
 	 * priority values. It is required to return a value between 0 and 100.
 	 * @since 11.0.0
 	 */
-	public function getPriority() {
+	public function getPriority(): int {
 		return 80;
 	}
 }

@@ -37,11 +37,11 @@ abstract class KitineraryActivitySettings extends ActivitySettings {
 		$this->l = $l;
 	}
 
-	public function getGroupIdentifier() {
+	public function getGroupIdentifier(): string {
 		return Application::APP_ID;
 	}
 
-	public function getGroupName() {
+	public function getGroupName(): string {
 		return $this->l->t('Kitinerary');
 	}
 }

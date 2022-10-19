@@ -62,10 +62,9 @@ class Provider implements IProvider {
 
 	/**
 	 * @param string $language
-	 * @return IEvent
 	 * @throws \InvalidArgumentException
 	 */
-	public function parse($language, IEvent $event, ?IEvent $previousEvent = null) {
+	public function parse($language, IEvent $event, ?IEvent $previousEvent = null): IEvent {
 		if ($event->getApp() !== Application::APP_ID || $event->getType() !== 'import') {
 			throw new \InvalidArgumentException();
 		}
