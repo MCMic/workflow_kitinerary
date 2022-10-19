@@ -1,3 +1,11 @@
+# v1.0.2
+
+* Bump version number
+
+# v1.0.1
+
+* Fix dependencies packaging
+
 # v1.0.0
 
 * Add an event in activities when a ticket is imported
