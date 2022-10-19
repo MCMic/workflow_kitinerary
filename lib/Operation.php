@@ -219,15 +219,22 @@ class Operation implements ISpecificOperation {
 		$notification->setUser($userId)
 			->setApp(Application::APP_ID)
 			->setDateTime(new \DateTime())
-			->setSubject('importDone', [
-				'principal' => $userUri,
-				'calendar' => $calendarUri,
-				'summary' => $eventSummary,
-				'fileId' => $file->getId(),
-				'fileName' => $file->getName(),
-				'filePath' => $file->getPath(),
-				'eventId' => $eventId,
-			])
+			->setSubject(
+				'importDone',
+				[
+					'event' => [
+						'principal' => $userUri,
+						'calendarUri' => $calendarUri,
+						'summary' => $eventSummary,
+						'id' => $eventId,
+					],
+					'file' => [
+						'id' => $file->getId(),
+						'name' => $file->getName(),
+						'path' => $file->getPath(),
+					],
+				]
+			)
 			->setObject('import', sha1($file->getName().$eventId));
 		$this->notificationManager->notify($notification);
 	}
@@ -242,13 +249,17 @@ class Operation implements ISpecificOperation {
 			->setSubject(
 				ActivityProvider::SUBJECT_IMPORTED,
 				[
-					'principal' => $userUri,
-					'calendar' => $calendarUri,
-					'summary' => $eventSummary,
-					'fileId' => $file->getId(),
-					'fileName' => $file->getName(),
-					'filePath' => $file->getPath(),
-					'eventId' => $eventId,
+					'event' => [
+						'principal' => $userUri,
+						'calendarUri' => $calendarUri,
+						'summary' => $eventSummary,
+						'id' => $eventId,
+					],
+					'file' => [
+						'id' => $file->getId(),
+						'name' => $file->getName(),
+						'path' => $file->getPath(),
+					],
 				]
 			)
 			->setObject('files', $file->getId());

@@ -95,18 +95,19 @@ class Provider implements IProvider {
 	}
 
 	private function setSubjects(IEvent $event, string $subject): void {
+		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string}} */
 		$subjectParams = $event->getSubjectParameters();
 		$parameters = [
 			'file' => $this->richObjectFactory->fromFileData(
-				$subjectParams['fileId'],
-				$subjectParams['fileName'],
-				trim($subjectParams['filePath'], '/')
+				$subjectParams['file']['id'],
+				$subjectParams['file']['name'],
+				trim($subjectParams['file']['path'], '/')
 			),
 			'event' => $this->richObjectFactory->fromEventData(
-				$subjectParams['eventId'],
-				$subjectParams['summary'],
+				$subjectParams['event']['id'],
+				$subjectParams['event']['summary'],
 				$event->getAffectedUser(),
-				$subjectParams['calendar']
+				$subjectParams['event']['calendarUri']
 			),
 		];
 

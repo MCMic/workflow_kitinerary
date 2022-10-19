@@ -70,9 +70,10 @@ class Notifier implements INotifier {
 
 	public function handleImportDone(INotification $notification, string $languageCode): INotification {
 		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
-		$param = $notification->getSubjectParameters();
+		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string}} */
+		$subjectParams = $notification->getSubjectParameters();
 
-		$path = $param['filePath'];
+		$path = $subjectParams['file']['path'];
 		if (strpos($path, '/' . $notification->getUser() . '/files/') === 0) {
 			// Remove /user/files/...
 			$fullPath = $path;
@@ -83,26 +84,26 @@ class Notifier implements INotifier {
 				$l->t('Imported {event}'),
 				[
 					'event' => $this->richObjectFactory->fromEventData(
-						$param['eventId'],
-						$param['summary'],
+						$subjectParams['event']['id'],
+						$subjectParams['event']['summary'],
 						$notification->getUser(),
-						$param['calendar']
+						$subjectParams['event']['calendarUri']
 					),
 				])
-			->setParsedSubject(str_replace('{event}', $param['summary'], $l->t('Imported {event}')))
+			->setParsedSubject(str_replace('{event}', $subjectParams['event']['summary'], $l->t('Imported {event}')))
 			->setRichMessage(
 				$l->t('Successfully imported from {file}'),
 				[
 					'file' => $this->richObjectFactory->fromFileData(
-						$param['fileId'],
-						$param['fileName'],
+						$subjectParams['file']['id'],
+						$subjectParams['file']['name'],
 						$path
 					),
 				])
 			->setParsedMessage(
 				str_replace(
 					['{file}'],
-					[$param['fileName']],
+					[$subjectParams['file']['name']],
 					$l->t('Successfully imported from {file}')
 				)
 			);
