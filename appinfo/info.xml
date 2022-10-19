@@ -18,7 +18,7 @@
 	<website>https://github.com/mcmic/workflow_kitinerary</website>
 	<bugs>https://github.com/mcmic/workflow_kitinerary/issues</bugs>
 	<repository type="git">https://github.com/mcmic/workflow_kitinerary.git</repository>
-	<screenshot>https://raw.githubusercontent.com/mcmic/workflow_kitinerary/master/screenshots/flow-settings-ui.png</screenshot>
+	<screenshot small-thumbnail="https://raw.githubusercontent.com/mcmic/workflow_kitinerary/master/screenshots/flow-add.png">https://raw.githubusercontent.com/mcmic/workflow_kitinerary/master/screenshots/flow-settings-ui.png</screenshot>
 	<dependencies>
 		<nextcloud min-version="24" max-version="25" />
 	</dependencies>
