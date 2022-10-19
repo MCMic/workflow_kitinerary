@@ -88,7 +88,11 @@ class Provider implements IProvider {
 			throw new \InvalidArgumentException();
 		}
 
-		$this->setSubjects($event, $subject);
+		try {
+			$this->setSubjects($event, $subject);
+		} catch (\Throwable $t) {
+			throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+		}
 		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
 
 		return $event;

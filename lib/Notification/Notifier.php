@@ -62,7 +62,11 @@ class Notifier implements INotifier {
 		}
 
 		if ($notification->getSubject() === 'importDone') {
-			return $this->handleImportDone($notification, $languageCode);
+			try {
+				return $this->handleImportDone($notification, $languageCode);
+			} catch (\Throwable $t) {
+				throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+			}
 		}
 
 		throw new \InvalidArgumentException('Unhandled subject');
