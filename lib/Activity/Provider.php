@@ -139,7 +139,7 @@ class Provider implements IProvider {
 			'event' => $this->richObjectFactory->fromEventData(
 				$subjectParams['eventId'],
 				$subjectParams['summary'],
-				$event->getUser(),
+				$event->getAffectedUser(),
 				$subjectParams['calendar']
 			),
 		];

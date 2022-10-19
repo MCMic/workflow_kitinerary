@@ -42,7 +42,7 @@ class KitineraryImport extends KitineraryActivitySettings {
 	 * @since 11.0.0
 	 */
 	public function getName() {
-		return $this->l->t('An event has been imported from a file');
+		return $this->l->t('An <strong>event</strong> has been imported from a file');
 	}
 
 	/**

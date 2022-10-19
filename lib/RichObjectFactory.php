@@ -50,10 +50,10 @@ class RichObjectFactory {
 	/**
 	 * @return array{type:'file',id:string,name:string,path:string,link:string}
 	 */
-	public function fromFileData(string $id, string $name, string $path): array {
+	public function fromFileData(int $id, string $name, string $path): array {
 		return [
 			'type' => 'file',
-			'id' => $id,
+			'id' => (string)$id,
 			'name' => $name,
 			'path' => $path,
 			'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $id]),
