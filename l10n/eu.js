@@ -3,7 +3,7 @@ OC.L10N.register(
     {
     "Kitinerary" : "Kitinerary",
     "Please select a calendar." : "Egutegia hautatu",
-    "Unknown" : "Ezezaguna",
+    "Untitled event" : "Izenik gabeko gertaera",
     "Automated kitinerary parsing" : "Kitinerary analisi automatikoa"
 },
 "nplurals=2; plural=(n != 1);");

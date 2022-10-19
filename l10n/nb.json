@@ -1,5 +1,5 @@
 { "translations": {
     "Please select a calendar." : "Velg en kalender.",
-    "Unknown" : "Ukjent"
+    "Untitled event" : "Hendelse uten tittel"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

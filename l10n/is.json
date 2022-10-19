@@ -1,5 +1,5 @@
 { "translations": {
     "Please select a calendar." : "Veldu dagatal.",
-    "Unknown" : "Óþekkt"
+    "Untitled event" : "Ónefndur atburður"
 },"pluralForm" :"nplurals=2; plural=(n % 10 != 1 || n % 100 == 11);"
 }

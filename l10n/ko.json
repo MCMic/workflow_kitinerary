@@ -1,5 +1,5 @@
 { "translations": {
     "Please select a calendar." : "달력을 선택하십시오.",
-    "Unknown" : "알 수 없음"
+    "Untitled event" : "제목 없는 일정"
 },"pluralForm" :"nplurals=1; plural=0;"
 }

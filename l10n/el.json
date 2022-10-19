@@ -1,5 +1,5 @@
 { "translations": {
     "Please select a calendar." : "Παρακαλώ επιλέξτε ημερολόγιο.",
-    "Unknown" : "Άγνωστο"
+    "Untitled event" : "Συμβάν χωρίς όνομα"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

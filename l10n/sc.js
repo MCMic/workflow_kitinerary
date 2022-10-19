@@ -1,6 +1,6 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "Unknown" : "Disconnotu"
+    "Untitled event" : "Eventu chene tìtulu"
 },
 "nplurals=2; plural=(n != 1);");

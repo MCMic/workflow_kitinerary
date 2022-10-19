@@ -1,5 +1,5 @@
 { "translations": {
     "Please select a calendar." : "Kérjük, válasszon egy naptárat.",
-    "Unknown" : "Ismeretlen"
+    "Untitled event" : "Névtelen esemény"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
