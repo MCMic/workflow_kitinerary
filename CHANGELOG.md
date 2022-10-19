@@ -1,3 +1,9 @@
+# v1.0.0
+
+* Add an event in activities when a ticket is imported
+* Downgrade nextcloud-vue to 6 for Nextcloud 24 support
+* Fix link to calendar event in notifications
+
 # v1.0.0 beta 1
 
 * Tested and confirmed working
