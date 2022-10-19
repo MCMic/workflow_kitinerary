@@ -29,6 +29,7 @@ declare(strict_types=1);
 namespace OCA\WorkflowKitinerary\Activity;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
+use OCA\WorkflowKitinerary\RichObjectFactory;
 use OCP\Activity\IEvent;
 use OCP\Activity\IEventMerger;
 use OCP\Activity\IManager;
@@ -44,17 +45,20 @@ class Provider implements IProvider {
 	protected IURLGenerator $url;
 	protected IManager $activityManager;
 	protected IEventMerger $eventMerger;
+	protected RichObjectFactory $richObjectFactory;
 
 	public function __construct(
 		IFactory $languageFactory,
 		IURLGenerator $url,
 		IManager $activityManager,
-		IEventMerger $eventMerger
+		IEventMerger $eventMerger,
+		RichObjectFactory $richObjectFactory
 	) {
 		$this->languageFactory = $languageFactory;
 		$this->url = $url;
 		$this->activityManager = $activityManager;
 		$this->eventMerger = $eventMerger;
+		$this->richObjectFactory = $richObjectFactory;
 	}
 
 	/**
@@ -70,11 +74,7 @@ class Provider implements IProvider {
 		$l = $this->languageFactory->get(Application::APP_ID, $language);
 
 		if ($this->activityManager->isFormattingFilteredObject()) {
-			try {
-				return $this->parseShortVersion($l, $event);
-			} catch (\InvalidArgumentException $e) {
-				// Ignore and simply use the long version...
-			}
+			return $this->parseShortVersion($l, $event);
 		}
 
 		return $this->parseLongVersion($l, $event, $previousEvent);
@@ -131,15 +131,12 @@ class Provider implements IProvider {
 		// 	];
 		// }
 		$parameters = [
-			'file' => [
-				'type' => 'file',
-				'id' => $subjectParams['fileId'],
-				'name' => $subjectParams['fileName'],
-				'path' => trim($subjectParams['filePath'], '/'),
-				'link' => $this->url->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $subjectParams['fileId']]),
-			],
-			// TODO import this function
-			'event' => $this->generateRichObjectEvent(
+			'file' => $this->richObjectFactory->fromFileData(
+				$subjectParams['fileId'],
+				$subjectParams['fileName'],
+				trim($subjectParams['filePath'], '/')
+			),
+			'event' => $this->richObjectFactory->fromEventData(
 				$subjectParams['eventId'],
 				$subjectParams['summary'],
 				$event->getUser(),
@@ -147,7 +144,7 @@ class Provider implements IProvider {
 			),
 		];
 
-		$event->setParsedSubject(str_replace(['{file}', '{event}'], [$parameters['file']['path'],$parameters['event']['path']], $subject))
-			->setRichSubject($subject, ['file' => $parameter]);
+		$event->setParsedSubject(str_replace(['{file}', '{event}'], [$parameters['file']['path'],$parameters['event']['name']], $subject))
+			->setRichSubject($subject, $parameters);
 	}
 }

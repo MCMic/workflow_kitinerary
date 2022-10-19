@@ -44,6 +44,7 @@ use OCP\Files\Node;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as NotificationManager;
+use OCP\Activity\IManager as ActivityManager;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -62,6 +63,7 @@ class Operation implements ISpecificOperation {
 	private LoggerInterface $logger;
 	private IManager $calendarManager;
 	private NotificationManager $notificationManager;
+	private ActivityManager $activityManager;
 	private ?string $userId;
 
 	public function __construct(
@@ -73,6 +75,7 @@ class Operation implements ISpecificOperation {
 		LoggerInterface $logger,
 		IManager $calendarManager,
 		NotificationManager $notificationManager,
+		ActivityManager $activityManager,
 		?string $userId
 	) {
 		$this->l = $l;
@@ -83,6 +86,7 @@ class Operation implements ISpecificOperation {
 		$this->logger = $logger;
 		$this->calendarManager = $calendarManager;
 		$this->notificationManager = $notificationManager;
+		$this->activityManager = $activityManager;
 		$this->userId = $userId;
 	}
 
@@ -132,6 +136,7 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
+		/** @var array{operation?:string}[] */
 		$matches = $ruleMatcher->getFlows(false);
 		$operations = [];
 		foreach ($matches as $match) {
@@ -190,7 +195,7 @@ class Operation implements ISpecificOperation {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
-				$this->successActivity();
+				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -207,6 +212,7 @@ class Operation implements ISpecificOperation {
 
 	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
+
 		// Send notification to user
 		$notification = $this->notificationManager->createNotification();
 		$notification->setUser($userId)
@@ -244,7 +250,7 @@ class Operation implements ISpecificOperation {
 					'eventId' => $eventId,
 				]
 			)
-			->setObject();
+			->setObject('files', $file->getId());
 		$this->activityManager->publish($event);
 	}
 

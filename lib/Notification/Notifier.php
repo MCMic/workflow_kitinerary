@@ -28,25 +28,21 @@ declare(strict_types=1);
 namespace OCA\WorkflowKitinerary\Notification;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
-use OCP\App\IAppManager;
-use OCP\IURLGenerator;
+use OCA\WorkflowKitinerary\RichObjectFactory;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
 class Notifier implements INotifier {
 	protected IFactory $l10nFactory;
-	protected IURLGenerator $urlGenerator;
-	protected IAppManager $appManager;
+	protected RichObjectFactory $richObjectFactory;
 
 	public function __construct(
 		IFactory $l10nFactory,
-		IURLGenerator $urlGenerator,
-		IAppManager $appManager
+		RichObjectFactory $richObjectFactory
 	) {
 		$this->l10nFactory = $l10nFactory;
-		$this->urlGenerator = $urlGenerator;
-		$this->appManager = $appManager;
+		$this->richObjectFactory = $richObjectFactory;
 	}
 
 	public function getID(): string {
@@ -86,7 +82,7 @@ class Notifier implements INotifier {
 			->setRichSubject(
 				$l->t('Imported {event}'),
 				[
-					'event' => $this->generateRichObjectEvent(
+					'event' => $this->richObjectFactory->fromEventData(
 						$param['eventId'],
 						$param['summary'],
 						$notification->getUser(),
@@ -97,13 +93,11 @@ class Notifier implements INotifier {
 			->setRichMessage(
 				$l->t('Successfully imported from {file}'),
 				[
-					'file' => [
-						'type' => 'file',
-						'id' => $param['fileId'],
-						'name' => $param['fileName'],
-						'path' => $path,
-						'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
-					],
+					'file' => $this->richObjectFactory->fromFileData(
+						$param['fileId'],
+						$param['fileName'],
+						$path
+					),
 				])
 			->setParsedMessage(
 				str_replace(
@@ -114,36 +108,5 @@ class Notifier implements INotifier {
 			);
 
 		return $notification;
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	protected function generateRichObjectEvent(string $id, string $name, string $owner, string $calendarUri): array {
-		$object = [
-			'type' => 'calendar-event',
-			'id' => $id,
-			'name' => $name,
-		];
-
-		if ($this->appManager->isEnabledForUser('calendar')) {
-			try {
-				// The calendar app needs to be manually loaded for the routes to be loaded
-				/** @psalm-suppress UndefinedClass */
-				\OC_App::loadApp('calendar');
-				$objectId = base64_encode('/remote.php/dav/calendars/' . $owner . '/' . $calendarUri . '/' . $id);
-				$link = [
-					'view' => 'dayGridMonth',
-					'timeRange' => 'now',
-					'mode' => 'sidebar',
-					'objectId' => $objectId,
-					'recurrenceId' => 'next'
-				];
-				$object['link'] = $this->urlGenerator->linkToRouteAbsolute('calendar.view.indexview.timerange.edit', $link);
-			} catch (\Exception $error) {
-				// Do nothing
-			}
-		}
-		return $object;
 	}
 }
