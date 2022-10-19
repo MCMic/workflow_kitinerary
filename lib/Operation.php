@@ -32,6 +32,7 @@ use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File as FileEntity;
+use OCA\WorkflowKitinerary\Activity\Provider as ActivityProvider;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCP\Calendar\Exceptions\CalendarException;
 use OCP\Calendar\ICreateFromString;
@@ -43,6 +44,7 @@ use OCP\Files\Node;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as NotificationManager;
+use OCP\Activity\IManager as ActivityManager;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -61,6 +63,7 @@ class Operation implements ISpecificOperation {
 	private LoggerInterface $logger;
 	private IManager $calendarManager;
 	private NotificationManager $notificationManager;
+	private ActivityManager $activityManager;
 	private ?string $userId;
 
 	public function __construct(
@@ -72,6 +75,7 @@ class Operation implements ISpecificOperation {
 		LoggerInterface $logger,
 		IManager $calendarManager,
 		NotificationManager $notificationManager,
+		ActivityManager $activityManager,
 		?string $userId
 	) {
 		$this->l = $l;
@@ -82,6 +86,7 @@ class Operation implements ISpecificOperation {
 		$this->logger = $logger;
 		$this->calendarManager = $calendarManager;
 		$this->notificationManager = $notificationManager;
+		$this->activityManager = $activityManager;
 		$this->userId = $userId;
 	}
 
@@ -131,12 +136,14 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
+		/** @var array{operation?:string}[] */
 		$matches = $ruleMatcher->getFlows(false);
 		$operations = [];
 		foreach ($matches as $match) {
-			if ($match['operation'] ?? false) {
+			$operation = $match['operation'] ?? false;
+			if ($operation) {
 				// Collect settings of matching rules
-				$operations[] = json_decode($match['operation']);
+				$operations[] = json_decode($operation);
 			}
 		}
 		if (empty($operations)) {
@@ -189,6 +196,7 @@ class Operation implements ISpecificOperation {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
+				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -205,22 +213,57 @@ class Operation implements ISpecificOperation {
 
 	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
+
 		// Send notification to user
 		$notification = $this->notificationManager->createNotification();
 		$notification->setUser($userId)
 			->setApp(Application::APP_ID)
 			->setDateTime(new \DateTime())
-			->setSubject('importDone', [
-				'principal' => $userUri,
-				'calendar' => $calendarUri,
-				'summary' => $eventSummary,
-				'fileId' => $file->getId(),
-				'fileName' => $file->getName(),
-				'filePath' => $file->getPath(),
-				'eventId' => $eventId,
-			])
+			->setSubject(
+				'importDone',
+				[
+					'event' => [
+						'principal' => $userUri,
+						'calendarUri' => $calendarUri,
+						'summary' => $eventSummary,
+						'id' => $eventId,
+					],
+					'file' => [
+						'id' => $file->getId(),
+						'name' => $file->getName(),
+						'path' => $file->getPath(),
+					],
+				]
+			)
 			->setObject('import', sha1($file->getName().$eventId));
 		$this->notificationManager->notify($notification);
+	}
+
+	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+		$userId = self::getUserIdFromPrincipalUri($userUri);
+
+		$event = $this->activityManager->generateEvent();
+		$event->setAffectedUser($userId)
+			->setApp(Application::APP_ID)
+			->setType('import')
+			->setSubject(
+				ActivityProvider::SUBJECT_IMPORTED,
+				[
+					'event' => [
+						'principal' => $userUri,
+						'calendarUri' => $calendarUri,
+						'summary' => $eventSummary,
+						'id' => $eventId,
+					],
+					'file' => [
+						'id' => $file->getId(),
+						'name' => $file->getName(),
+						'path' => $file->getPath(),
+					],
+				]
+			)
+			->setObject('files', $file->getId());
+		$this->activityManager->publish($event);
 	}
 
 	/**

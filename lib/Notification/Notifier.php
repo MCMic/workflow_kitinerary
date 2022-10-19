@@ -28,25 +28,21 @@ declare(strict_types=1);
 namespace OCA\WorkflowKitinerary\Notification;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
-use OCP\App\IAppManager;
-use OCP\IURLGenerator;
+use OCA\WorkflowKitinerary\RichObjectFactory;
 use OCP\L10N\IFactory;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
 class Notifier implements INotifier {
 	protected IFactory $l10nFactory;
-	protected IURLGenerator $urlGenerator;
-	protected IAppManager $appManager;
+	protected RichObjectFactory $richObjectFactory;
 
 	public function __construct(
 		IFactory $l10nFactory,
-		IURLGenerator $urlGenerator,
-		IAppManager $appManager
+		RichObjectFactory $richObjectFactory
 	) {
 		$this->l10nFactory = $l10nFactory;
-		$this->urlGenerator = $urlGenerator;
-		$this->appManager = $appManager;
+		$this->richObjectFactory = $richObjectFactory;
 	}
 
 	public function getID(): string {
@@ -66,7 +62,11 @@ class Notifier implements INotifier {
 		}
 
 		if ($notification->getSubject() === 'importDone') {
-			return $this->handleImportDone($notification, $languageCode);
+			try {
+				return $this->handleImportDone($notification, $languageCode);
+			} catch (\Throwable $t) {
+				throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+			}
 		}
 
 		throw new \InvalidArgumentException('Unhandled subject');
@@ -74,9 +74,10 @@ class Notifier implements INotifier {
 
 	public function handleImportDone(INotification $notification, string $languageCode): INotification {
 		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
-		$param = $notification->getSubjectParameters();
+		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string}} */
+		$subjectParams = $notification->getSubjectParameters();
 
-		$path = $param['filePath'];
+		$path = $subjectParams['file']['path'];
 		if (strpos($path, '/' . $notification->getUser() . '/files/') === 0) {
 			// Remove /user/files/...
 			$fullPath = $path;
@@ -86,64 +87,31 @@ class Notifier implements INotifier {
 			->setRichSubject(
 				$l->t('Imported {event}'),
 				[
-					'event' => $this->generateRichObjectEvent(
-						$param['eventId'],
-						$param['summary'],
+					'event' => $this->richObjectFactory->fromEventData(
+						$subjectParams['event']['id'],
+						$subjectParams['event']['summary'],
 						$notification->getUser(),
-						$param['calendar']
+						$subjectParams['event']['calendarUri']
 					),
 				])
-			->setParsedSubject(str_replace('{event}', $param['summary'], $l->t('Imported {event}')))
+			->setParsedSubject(str_replace('{event}', $subjectParams['event']['summary'], $l->t('Imported {event}')))
 			->setRichMessage(
 				$l->t('Successfully imported from {file}'),
 				[
-					'file' => [
-						'type' => 'file',
-						'id' => $param['fileId'],
-						'name' => $param['fileName'],
-						'path' => $path,
-						'link' => $this->urlGenerator->linkToRouteAbsolute('files.viewcontroller.showFile', ['fileid' => $param['fileId']]),
-					],
+					'file' => $this->richObjectFactory->fromFileData(
+						$subjectParams['file']['id'],
+						$subjectParams['file']['name'],
+						$path
+					),
 				])
 			->setParsedMessage(
 				str_replace(
 					['{file}'],
-					[$param['fileName']],
+					[$subjectParams['file']['name']],
 					$l->t('Successfully imported from {file}')
 				)
 			);
 
 		return $notification;
-	}
-
-	/**
-	 * @return array<string,string>
-	 */
-	protected function generateRichObjectEvent(string $id, string $name, string $owner, string $calendarUri): array {
-		$object = [
-			'type' => 'calendar-event',
-			'id' => $id,
-			'name' => $name,
-		];
-
-		if ($this->appManager->isEnabledForUser('calendar')) {
-			try {
-				// The calendar app needs to be manually loaded for the routes to be loaded
-				/** @psalm-suppress UndefinedClass */
-				\OC_App::loadApp('calendar');
-				$objectId = base64_encode('/remote.php/dav/calendars/' . $owner . '/' . $calendarUri . '/' . $id);
-				$link = [
-					'view' => 'dayGridMonth',
-					'timeRange' => 'now',
-					'mode' => 'sidebar',
-					'objectId' => $objectId,
-					'recurrenceId' => 'next'
-				];
-				$object['link'] = $this->urlGenerator->linkToRouteAbsolute('calendar.view.indexview.timerange.edit', $link);
-			} catch (\Exception $error) {
-				// Do nothing
-			}
-		}
-		return $object;
 	}
 }
