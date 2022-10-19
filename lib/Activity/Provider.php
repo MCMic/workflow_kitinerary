@@ -97,14 +97,6 @@ class Provider implements IProvider {
 
 	private function setSubjects(IEvent $event, string $subject): void {
 		$subjectParams = $event->getSubjectParameters();
-		// if (empty($subjectParams)) {
-		// 	// Try to fall back to the old way, but this does not work for emails.
-		// 	// But at least old activities still work.
-		// 	$subjectParams = [
-		// 		'id' => $event->getObjectId(),
-		// 		'path' => $event->getObjectName(),
-		// 	];
-		// }
 		$parameters = [
 			'file' => $this->richObjectFactory->fromFileData(
 				$subjectParams['fileId'],
