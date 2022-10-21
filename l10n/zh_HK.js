@@ -1,8 +1,8 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "Kitinerary" : "Kitinerary",
     "Imported {event}" : "導入的 {event}",
+    "Kitinerary" : "Kitinerary",
     "Successfully imported from {file}" : "從 {file} 成功導入",
     "No user id in session" : "時段中沒有用戶 ID",
     "Please select a calendar." : "請選取一個日曆。",

@@ -1,4 +1,13 @@
 { "translations": {
-    "Please select a calendar." : "Моля изберете календар."
+    "Imported {event}" : "Импортирано {event}",
+    "Kitinerary" : "Приложение Kitinerary",
+    "Successfully imported from {file}" : "Успешно импортирано от {file}",
+    "No user id in session" : "Няма идентификатор на потребител в сесията",
+    "Please select a calendar." : "Моля изберете календар.",
+    "Convert travel documents into calendar events and inserts them into a calendar." : "Преобразува документите за пътуване в календарни събития и ги вмъква в календар.",
+    "Untitled event" : "Събитие без заглавие",
+    "Automated kitinerary parsing" : "Автоматизиран разбор на събития",
+    "Use kitinerary to parse travel documents into the calendar" : "Използване на kitinerary за анализиране на документите за пътуване в календар",
+    "An app to trigger automatic conversion of travel documents to calendar events. It uses kitinerary to extract the information and is compatible with the KDE itinerary mobile application." : "Приложение за задействане на автоматично преобразуване на документи за пътуване в събития от календара. То използва kitinerary за извличане на информацията и е съвместимо с мобилното приложение KDE itinerary/маршрут/."
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }

@@ -1,9 +1,10 @@
 { "translations": {
-    "Kitinerary" : "Kitinerary",
     "Imported {event}" : "{event} içe aktarıldı",
+    "Kitinerary" : "Kitinerary",
     "Successfully imported from {file}" : "{file} üzerinden içe aktarıldı",
     "No user id in session" : "Oturumda kullanıcı kodu bulunamadı",
     "Please select a calendar." : "Lütfen bir takvim seçin.",
+    "Convert travel documents into calendar events and inserts them into a calendar." : "Gezi belgelerini takvim etkinliklerine dönüştürerek bir takvime ekler.",
     "Untitled event" : "Adlandırılmamış etkinlik",
     "Automated kitinerary parsing" : "Otomatik kitinerary işleme",
     "Use kitinerary to parse travel documents into the calendar" : "Gezi belgelerini takvime işlemek için Kitinerary uygulamasını kullanın",

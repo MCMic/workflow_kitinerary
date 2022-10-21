@@ -1,8 +1,8 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "Kitinerary" : "Kitinerary",
     "Imported {event}" : "Naimportováno {event}",
+    "Kitinerary" : "Kitinerary",
     "Successfully imported from {file}" : "Úspěšně naimportováno z {file}",
     "No user id in session" : "Žádný identifikátor uživatele v relaci",
     "Please select a calendar." : "Vyberte kalendář.",
