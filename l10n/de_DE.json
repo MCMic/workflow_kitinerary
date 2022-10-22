@@ -1,6 +1,8 @@
 { "translations": {
     "Imported {event}" : "Importiert {event}",
+    "Imported {event} from {file}" : "{event} importiert von {file}",
     "Kitinerary" : "Kitinerary",
+    "An <strong>event</strong> has been imported from a file" : "Ein <strong>Ereignis</strong> wurde aus einer Datei importiert",
     "Successfully imported from {file}" : "Erfolgreich importiert von {file}",
     "No user id in session" : "Keine Benutzer-ID in der Sitzung",
     "Please select a calendar." : "Bitte wählen Sie einen Kalender aus.",
