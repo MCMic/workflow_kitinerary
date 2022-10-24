@@ -18,6 +18,7 @@ package-lock.json
 .php-cs-fixer.cache
 .php-cs-fixer.dist.php
 /screenshots
+/screencasts
 /src
 .stylelintrc.js
 stylelint.config.js
