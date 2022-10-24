@@ -169,6 +169,10 @@ class Operation implements ISpecificOperation {
 		$adapter = $this->findAvailableAdapter();
 		$this->logger->debug('Using adapter '.get_class($adapter));
 
+		// FIXME This is the locale of current user, not the user that set up the workflow
+		// FIXME This does not work anyway, locale returned is like fr while putenv would need fr_FR.UTF8 to work.
+		$this->logger->debug('Using locale '.$this->l->getLanguageCode());
+		putenv('LC_ALL='.$this->l->getLanguageCode());
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
 		foreach ($operations as [$userUri, $calendarUri]) {
