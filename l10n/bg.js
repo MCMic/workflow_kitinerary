@@ -2,7 +2,9 @@ OC.L10N.register(
     "workflow_kitinerary",
     {
     "Imported {event}" : "Импортирано {event}",
+    "Imported {event} from {file}" : "Импортирано {event} от {file}",
     "Kitinerary" : "Приложение Kitinerary",
+    "An <strong>event</strong> has been imported from a file" : "<strong>Събитието</strong> е импортирано от файл",
     "Successfully imported from {file}" : "Успешно импортирано от {file}",
     "No user id in session" : "Няма идентификатор на потребител в сесията",
     "Please select a calendar." : "Моля изберете календар.",
