@@ -6,7 +6,7 @@
     "Successfully imported from {file}" : "Erfolgreich importiert von {file}",
     "No user id in session" : "Keine Benutzer-ID in der Sitzung",
     "Please select a calendar." : "Bitte wählen Sie einen Kalender aus.",
-    "Convert travel documents into calendar events and inserts them into a calendar." : "Wandeln Sie Reiseunterlagen in Kalenderereignisse um und fügen Sie sie in einen Kalender ein.",
+    "Convert travel documents into calendar events and inserts them into a calendar." : "Reiseunterlagen in Kalenderereignisse umwandeln und einem Kalender hinzufügen.",
     "Untitled event" : "Unbenannter Termin",
     "Automated kitinerary parsing" : "Automatisierte Kitinerary-Analyse",
     "Use kitinerary to parse travel documents into the calendar" : "Verwenden Sie kitinerary, um Reisedokumente in den Kalender zu parsen",
