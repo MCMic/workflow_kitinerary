@@ -77,14 +77,7 @@ class Provider implements IProvider {
 			$subject = $l->t('Imported {event} from {file}');
 		}
 
-		if ($event->getSubject() === self::SUBJECT_IMPORTED) {
-			// TODO Change icon depending on ticket?
-			if ($this->activityManager->getRequirePNG()) {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'longdistancetrain.png')));
-			} else {
-				$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, 'longdistancetrain.svg')));
-			}
-		} else {
+		if ($event->getSubject() !== self::SUBJECT_IMPORTED) {
 			throw new \InvalidArgumentException();
 		}
 
@@ -99,8 +92,13 @@ class Provider implements IProvider {
 	}
 
 	private function setSubjects(IEvent $event, string $subject): void {
-		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string}} */
+		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string,type:string}} */
 		$subjectParams = $event->getSubjectParameters();
+
+		$iconName = $this->getIconNameFromType($subjectParams['event']['type']);
+		$iconName .= ($this->activityManager->getRequirePNG() ? '.png' : '.svg');
+		$event->setIcon($this->url->getAbsoluteURL($this->url->imagePath(Application::APP_ID, $iconName)));
+
 		$parameters = [
 			'file' => $this->richObjectFactory->fromFileData(
 				$subjectParams['file']['id'],
@@ -117,5 +115,24 @@ class Provider implements IProvider {
 
 		$event->setParsedSubject(str_replace(['{file}', '{event}'], [$parameters['file']['path'],$parameters['event']['name']], $subject))
 			->setRichSubject($subject, $parameters);
+	}
+
+	private function getIconNameFromType(string $type): string {
+		switch ($type) {
+			case 'FlightReservation':
+				return 'flight';
+			case 'TrainReservation':
+				return 'longdistancetrain';
+			case 'BusReservation':
+				return 'bus';
+			case 'LodgingReservation':
+				return 'go-home-symbolic';
+			case 'FoodEstablishmentReservation':
+				return 'foodestablishment';
+			case 'RentalCarReservation':
+				return 'car';
+			default:
+				return 'meeting-attending';
+		}
 	}
 }

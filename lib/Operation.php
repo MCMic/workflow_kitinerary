@@ -211,6 +211,14 @@ class Operation implements ISpecificOperation {
 		return explode('/', $userUri, 3)[2];
 	}
 
+	private function extractTypeFromEvent(VEvent $vEvent): string {
+		/** @var string */
+		$json = $vEvent->{'X-KDE-KITINERARY-RESERVATION'} ?? $vEvent->{'STRUCTURED-DATA'} ?? '[]';
+		/** @var array */
+		$data = json_decode($json, true);
+		return (string)($data[0]['@type'] ?? 'unknown');
+	}
+
 	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
 
@@ -239,7 +247,7 @@ class Operation implements ISpecificOperation {
 		$this->notificationManager->notify($notification);
 	}
 
-	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, string $eventType, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
 
 		$event = $this->activityManager->generateEvent();
@@ -254,6 +262,7 @@ class Operation implements ISpecificOperation {
 						'calendarUri' => $calendarUri,
 						'summary' => $eventSummary,
 						'id' => $eventId,
+						'type' => $eventType,
 					],
 					'file' => [
 						'id' => $file->getId(),
