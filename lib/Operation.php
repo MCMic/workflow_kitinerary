@@ -189,6 +189,7 @@ class Operation implements ISpecificOperation {
 		$events = $vEvent->getIterator();
 
 		foreach ($events as $event) {
+			/** @var VEvent $event */
 			unset($vCalendar->VEVENT);
 			$vCalendar->add($event);
 
@@ -196,7 +197,7 @@ class Operation implements ISpecificOperation {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
-				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
+				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
