@@ -1,4 +1,5 @@
 { "translations": {
+    "No user id in session" : "Ingen bruker-ID i økten",
     "Please select a calendar." : "Velg en kalender.",
     "Untitled event" : "Hendelse uten tittel"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
