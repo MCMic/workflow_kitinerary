@@ -107,7 +107,7 @@ class Operation implements ISpecificOperation {
 
 	public function validateOperation(string $name, array $checks, string $operation): void {
 		if ($this->userId === null) {
-			throw new UnexpectedValueException($this->l->t('No user id in session'));
+			throw new UnexpectedValueException($this->l->t('No user ID in session'));
 		}
 		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
 		if (!isset($calendars[$operation])) {
