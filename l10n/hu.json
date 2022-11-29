@@ -1,4 +1,5 @@
 { "translations": {
+    "Imported {event}" : "{filename} importálva",
     "Please select a calendar." : "Válasszon egy naptárat.",
     "Untitled event" : "Névtelen esemény"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
