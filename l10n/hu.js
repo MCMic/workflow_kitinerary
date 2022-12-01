@@ -6,7 +6,6 @@ OC.L10N.register(
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Egy <strong>esemény</strong> importálva lett egy fájlból",
     "Successfully imported from {file}" : "Sikeresen importálva innen: {file}",
-    "No user id in session" : "Nem felhasználóazonosító a munkamenetben",
     "Please select a calendar." : "Válasszon egy naptárat.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Utazási dokumentumok naptáreseményekké alakítása és beszúrás egy naptárba",
     "Untitled event" : "Névtelen esemény",

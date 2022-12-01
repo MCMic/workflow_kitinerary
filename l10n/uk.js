@@ -2,7 +2,6 @@ OC.L10N.register(
     "workflow_kitinerary",
     {
     "Kitinerary" : "Kitinerary",
-    "No user id in session" : "Немає ідентифікатора користувача в сеансі",
     "Please select a calendar." : "Будь ласка, виберіть календар.Будь ласка, виберіть календар.",
     "Untitled event" : "Подія без назви",
     "Automated kitinerary parsing" : "Автоматизований парсинг маршруту",

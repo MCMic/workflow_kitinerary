@@ -1,7 +1,6 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "No user id in session" : "Seanse nėra naudotojo id",
     "Please select a calendar." : "Pasirinkite kalendorių.",
     "Untitled event" : "Įvykis be pavadinimo"
 },
