@@ -6,6 +6,7 @@ OC.L10N.register(
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Bir dosyadan bir <strong>etkinlik</strong> içe aktarıldı",
     "Successfully imported from {file}" : "{file} üzerinden içe aktarıldı",
+    "No user ID in session" : "Oturumda kullanıcı kodu bulunamadı",
     "Please select a calendar." : "Lütfen bir takvim seçin.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Gezi belgelerini takvim etkinliklerine dönüştürerek bir takvime ekler.",
     "Untitled event" : "Adlandırılmamış etkinlik",
