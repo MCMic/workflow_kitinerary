@@ -189,6 +189,7 @@ class Operation implements ISpecificOperation {
 		$events = $vEvent->getIterator();
 
 		foreach ($events as $event) {
+			/** @var VEvent $event */
 			unset($vCalendar->VEVENT);
 			$vCalendar->add($event);
 
@@ -196,7 +197,7 @@ class Operation implements ISpecificOperation {
 				$eventFilename = $file->getName() . $event->UID . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
-				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
+				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
 			} catch (CalendarException $e) {
 				throw $e;
 			}
@@ -209,6 +210,14 @@ class Operation implements ISpecificOperation {
 
 	private static function getUserIdFromPrincipalUri(string $userUri): string {
 		return explode('/', $userUri, 3)[2];
+	}
+
+	private function extractTypeFromEvent(VEvent $vEvent): string {
+		/** @var string */
+		$json = $vEvent->{'X-KDE-KITINERARY-RESERVATION'} ?? $vEvent->{'STRUCTURED-DATA'} ?? '[]';
+		/** @var array */
+		$data = json_decode($json, true);
+		return (string)($data[0]['@type'] ?? 'unknown');
 	}
 
 	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
@@ -239,7 +248,7 @@ class Operation implements ISpecificOperation {
 		$this->notificationManager->notify($notification);
 	}
 
-	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+	private function successActivity(string $userUri, string $calendarUri, string $eventId, string $eventSummary, string $eventType, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
 
 		$event = $this->activityManager->generateEvent();
@@ -254,6 +263,7 @@ class Operation implements ISpecificOperation {
 						'calendarUri' => $calendarUri,
 						'summary' => $eventSummary,
 						'id' => $eventId,
+						'type' => $eventType,
 					],
 					'file' => [
 						'id' => $file->getId(),
