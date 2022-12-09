@@ -6,6 +6,7 @@ OC.L10N.register(
     "Kitinerary" : "Приложение Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "<strong>Събитието</strong> е импортирано от файл",
     "Successfully imported from {file}" : "Успешно импортирано от {file}",
+    "No user ID in session" : "Няма идентификатор на потребител в сесията",
     "Please select a calendar." : "Моля изберете календар.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Преобразува документите за пътуване в календарни събития и ги вмъква в календар.",
     "Untitled event" : "Събитие без заглавие",
