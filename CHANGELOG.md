@@ -1,3 +1,10 @@
+# v1.1.0
+
+* Change icon depending on reservation type
+* Updated translations (Huge thanks to translators!)
+* Dependencies upgrades
+* Last version supporting Nextcloud 24 and PHP 7.4. Next one will require Nextcloud 25 and PHP 8.
+
 # v1.0.3
 
 * Fix .nextcloudignore removing dependencies code from release
