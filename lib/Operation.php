@@ -41,6 +41,7 @@ use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\GenericEvent;
 use OCP\Files\File;
 use OCP\Files\Node;
+use OCP\IConfig;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as NotificationManager;
@@ -55,6 +56,7 @@ use Sabre\VObject\Reader;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
+	private IConfig $config;
 	private IL10N $l;
 	private IURLGenerator $urlGenerator;
 	private BinaryAdapter $binAdapter;
@@ -67,6 +69,7 @@ class Operation implements ISpecificOperation {
 	private ?string $userId;
 
 	public function __construct(
+		IConfig $config,
 		IL10N $l,
 		IURLGenerator $urlGenerator,
 		BinaryAdapter $binAdapter,
@@ -78,6 +81,7 @@ class Operation implements ISpecificOperation {
 		ActivityManager $activityManager,
 		?string $userId
 	) {
+		$this->config = $config;
 		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
 		$this->binAdapter = $binAdapter;
@@ -168,11 +172,22 @@ class Operation implements ISpecificOperation {
 
 		$adapter = $this->findAvailableAdapter();
 		$this->logger->debug('Using adapter '.get_class($adapter));
-
-		$itinerary = $adapter->extractIcalFromString($node->getContent());
+		$itineraries = [];
+		// TODO We should check node size and have a limit, most likely (otherwise a misconfigured flow which triggers on a video may try to put 2Gio in RAM)
+		$stringContent = $node->getContent();
 
 		foreach ($operations as [$userUri, $calendarUri]) {
-			$this->insertIcalEvent($userUri, $calendarUri, $node, $itinerary);
+			/* Get the locale for the concerned user */
+			$userId = self::getUserIdFromPrincipalUri($userUri);
+			$locale = $this->getUserLocale($userId);
+			if (!isset($itineraries[$locale])) {
+				/* Extract data once per locale */
+				$this->logger->debug('Using locale '.$locale);
+				// FIXME This does not work, $locale is like fr while putenv would need fr_FR.UTF8 to work.
+				putenv('LC_ALL='.$locale);
+				$itineraries[$locale] = $adapter->extractIcalFromString($stringContent);
+			}
+			$this->insertIcalEvent($userUri, $calendarUri, $node, $itineraries[$locale]);
 		}
 	}
 
@@ -202,6 +217,12 @@ class Operation implements ISpecificOperation {
 				throw $e;
 			}
 		}
+	}
+
+	private function getUserLocale(string $userId): string {
+		$defaultLanguage = $this->config->getSystemValueString('default_language', 'en');
+		$userLocale = $this->config->getUserValue($userId, 'core', 'lang', $defaultLanguage);
+		return $this->config->getSystemValueString('force_language', $userLocale);
 	}
 
 	private static function computePrincipalUri(string $userId): string {
