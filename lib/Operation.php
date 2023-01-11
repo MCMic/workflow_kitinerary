@@ -55,39 +55,18 @@ use Sabre\VObject\Reader;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
-	private IL10N $l;
-	private IURLGenerator $urlGenerator;
-	private BinaryAdapter $binAdapter;
-	private FlatpakAdapter $flatpakAdapter;
-	private SysAdapter $sysAdapter;
-	private LoggerInterface $logger;
-	private IManager $calendarManager;
-	private NotificationManager $notificationManager;
-	private ActivityManager $activityManager;
-	private ?string $userId;
-
 	public function __construct(
-		IL10N $l,
-		IURLGenerator $urlGenerator,
-		BinaryAdapter $binAdapter,
-		FlatpakAdapter $flatpakAdapter,
-		SysAdapter $sysAdapter,
-		LoggerInterface $logger,
-		IManager $calendarManager,
-		NotificationManager $notificationManager,
-		ActivityManager $activityManager,
-		?string $userId
+		private IL10N $l,
+		private IURLGenerator $urlGenerator,
+		private BinaryAdapter $binAdapter,
+		private FlatpakAdapter $flatpakAdapter,
+		private SysAdapter $sysAdapter,
+		private LoggerInterface $logger,
+		private IManager $calendarManager,
+		private NotificationManager $notificationManager,
+		private ActivityManager $activityManager,
+		private ?string $userId,
 	) {
-		$this->l = $l;
-		$this->urlGenerator = $urlGenerator;
-		$this->binAdapter = $binAdapter;
-		$this->flatpakAdapter = $flatpakAdapter;
-		$this->sysAdapter = $sysAdapter;
-		$this->logger = $logger;
-		$this->calendarManager = $calendarManager;
-		$this->notificationManager = $notificationManager;
-		$this->activityManager = $activityManager;
-		$this->userId = $userId;
 	}
 
 	private function findAvailableAdapter(): Adapter {
@@ -143,7 +122,7 @@ class Operation implements ISpecificOperation {
 			$operation = $match['operation'] ?? false;
 			if ($operation) {
 				// Collect settings of matching rules
-				$operations[] = json_decode($operation);
+				$operations[] = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
 			}
 		}
 		if (empty($operations)) {
@@ -167,7 +146,7 @@ class Operation implements ISpecificOperation {
 		}
 
 		$adapter = $this->findAvailableAdapter();
-		$this->logger->debug('Using adapter '.get_class($adapter));
+		$this->logger->debug('Using adapter '.$adapter::class);
 
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
@@ -216,7 +195,7 @@ class Operation implements ISpecificOperation {
 		/** @var string */
 		$json = $vEvent->{'X-KDE-KITINERARY-RESERVATION'} ?? $vEvent->{'STRUCTURED-DATA'} ?? '[]';
 		/** @var array */
-		$data = json_decode($json, true);
+		$data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		return (string)($data[0]['@type'] ?? 'unknown');
 	}
 
@@ -284,7 +263,7 @@ class Operation implements ISpecificOperation {
 		$userUri = self::computePrincipalUri($userId);
 		$calendars = $calendarManager->getCalendarsForPrincipal($userUri);
 		foreach ($calendars as $calendar) {
-			$value = json_encode([$userUri, $calendar->getUri()]);
+			$value = json_encode([$userUri, $calendar->getUri()], JSON_THROW_ON_ERROR);
 			$userCalendars[$value] = $calendar->getDisplayName() ?? $calendar->getUri();
 		}
 		return $userCalendars;

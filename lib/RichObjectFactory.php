@@ -36,15 +36,10 @@ use OCP\IURLGenerator;
  * Methods are named fromTypeData so that we can add later fromTypeObject to directly take an event or file object as parameter.
  */
 class RichObjectFactory {
-	protected IURLGenerator $urlGenerator;
-	protected IAppManager $appManager;
-
 	public function __construct(
-		IURLGenerator $urlGenerator,
-		IAppManager $appManager
+		protected IURLGenerator $urlGenerator,
+		protected IAppManager $appManager,
 	) {
-		$this->urlGenerator = $urlGenerator;
-		$this->appManager = $appManager;
 	}
 
 	/**
@@ -84,7 +79,7 @@ class RichObjectFactory {
 					'recurrenceId' => 'next'
 				];
 				$object['link'] = $this->urlGenerator->linkToRouteAbsolute('calendar.view.indexview.timerange.edit', $link);
-			} catch (\Exception $error) {
+			} catch (\Exception) {
 				// Do nothing
 			}
 		}

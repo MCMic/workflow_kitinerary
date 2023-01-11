@@ -34,15 +34,10 @@ use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
 
 class Notifier implements INotifier {
-	protected IFactory $l10nFactory;
-	protected RichObjectFactory $richObjectFactory;
-
 	public function __construct(
-		IFactory $l10nFactory,
-		RichObjectFactory $richObjectFactory
+		protected IFactory $l10nFactory,
+		protected RichObjectFactory $richObjectFactory,
 	) {
-		$this->l10nFactory = $l10nFactory;
-		$this->richObjectFactory = $richObjectFactory;
 	}
 
 	public function getID(): string {
@@ -78,7 +73,7 @@ class Notifier implements INotifier {
 		$subjectParams = $notification->getSubjectParameters();
 
 		$path = $subjectParams['file']['path'];
-		if (strpos($path, '/' . $notification->getUser() . '/files/') === 0) {
+		if (str_starts_with($path, '/' . $notification->getUser() . '/files/')) {
 			// Remove /user/files/...
 			$fullPath = $path;
 			[,,, $path] = explode('/', $fullPath, 4);

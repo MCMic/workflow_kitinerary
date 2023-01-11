@@ -39,24 +39,13 @@ use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 use Psr\Container\ContainerInterface;
 
 class RegisterFlowOperationsListener implements IEventListener {
-	private ContainerInterface $container;
-	private IUserSession $userSession;
-	private IInitialState $initialState;
-	private IManager $calendarManager;
-	private ?string $userId;
-
 	public function __construct(
-		ContainerInterface $container,
-		IUserSession $userSession,
-		IInitialState $initialState,
-		IManager $calendarManager,
-		?string $userId
+		private ContainerInterface $container,
+		private IUserSession $userSession,
+		private IInitialState $initialState,
+		private IManager $calendarManager,
+		private ?string $userId,
 	) {
-		$this->container = $container;
-		$this->userSession = $userSession;
-		$this->initialState = $initialState;
-		$this->calendarManager = $calendarManager;
-		$this->userId = $userId;
 	}
 
 	public function handle(Event $event): void {
