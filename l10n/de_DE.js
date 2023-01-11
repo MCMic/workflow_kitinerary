@@ -1,7 +1,7 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
-    "Imported {event}" : "Importiert {event}",
+    "Imported {event}" : "{event} importiert",
     "Imported {event} from {file}" : "{event} importiert von {file}",
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Ein <strong>Ereignis</strong> wurde aus einer Datei importiert",
