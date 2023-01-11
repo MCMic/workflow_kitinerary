@@ -125,7 +125,7 @@ class Operation implements ISpecificOperation {
 				$operations[] = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
 			}
 		}
-		if (empty($operations)) {
+		if ($operations === []) {
 			// No rule is matching, we were called for nothing
 			return;
 		}

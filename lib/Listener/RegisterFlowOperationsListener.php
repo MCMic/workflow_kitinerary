@@ -33,7 +33,6 @@ use OCP\AppFramework\Services\IInitialState;
 use OCP\Calendar\IManager;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IUserSession;
 use OCP\Util;
 use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 use Psr\Container\ContainerInterface;
@@ -41,7 +40,6 @@ use Psr\Container\ContainerInterface;
 class RegisterFlowOperationsListener implements IEventListener {
 	public function __construct(
 		private ContainerInterface $container,
-		private IUserSession $userSession,
 		private IInitialState $initialState,
 		private IManager $calendarManager,
 		private ?string $userId,
