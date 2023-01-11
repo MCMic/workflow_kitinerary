@@ -135,6 +135,7 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
+		/** @psalm-suppress DeprecatedClass */
 		if ($eventName === \OCP\Files::class . '::postRename') {
 			/** @psalm-suppress DeprecatedMethod */
 			[, $node] = $event->getSubject();
