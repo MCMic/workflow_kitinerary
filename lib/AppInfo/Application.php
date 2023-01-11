@@ -38,6 +38,9 @@ use OCP\WorkflowEngine\Events\RegisterOperationsEvent;
 include_once __DIR__ . '/../../vendor/autoload.php';
 
 class Application extends App implements IBootstrap {
+	/**
+	 * @var string
+	 */
 	public const APP_ID = 'workflow_kitinerary';
 
 	public function __construct() {

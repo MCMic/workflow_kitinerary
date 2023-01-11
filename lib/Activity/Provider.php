@@ -38,6 +38,9 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 
 class Provider implements IProvider {
+	/**
+	 * @var string
+	 */
 	public const SUBJECT_IMPORTED = 'imported';
 
 	public function __construct(
@@ -72,9 +75,10 @@ class Provider implements IProvider {
 
 		try {
 			$this->setSubjects($event, $subject);
-		} catch (\Throwable $t) {
-			throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+		} catch (\Throwable $throwable) {
+			throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
 		}
+
 		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
 
 		return $event;

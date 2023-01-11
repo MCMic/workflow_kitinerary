@@ -74,13 +74,16 @@ class Operation implements ISpecificOperation {
 			$this->sysAdapter->setLogger($this->logger);
 			return $this->sysAdapter;
 		}
+
 		if ($this->binAdapter->isAvailable()) {
 			$this->binAdapter->setLogger($this->logger);
 			return $this->binAdapter;
 		}
+
 		if ($this->flatpakAdapter->isAvailable()) {
 			return $this->flatpakAdapter;
 		}
+
 		throw new \Exception('No kitinerary adapter is available');
 	}
 
@@ -88,6 +91,7 @@ class Operation implements ISpecificOperation {
 		if ($this->userId === null) {
 			throw new UnexpectedValueException($this->l->t('No user ID in session'));
 		}
+
 		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
 		if (!isset($calendars[$operation])) {
 			throw new UnexpectedValueException($this->l->t('Please select a calendar.'));
@@ -125,18 +129,20 @@ class Operation implements ISpecificOperation {
 				$operations[] = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
 			}
 		}
+
 		if ($operations === []) {
 			// No rule is matching, we were called for nothing
 			return;
 		}
 
-		if ($eventName === '\OCP\Files::postRename') {
+		if ($eventName === \OCP\Files::class . '::postRename') {
 			/** @psalm-suppress DeprecatedMethod */
 			[, $node] = $event->getSubject();
 		} else {
 			/** @psalm-suppress DeprecatedMethod */
 			$node = $event->getSubject();
 		}
+
 		/** @var Node $node */
 
 		// '', admin, 'files', 'path/to/file.txt'
@@ -177,8 +183,8 @@ class Operation implements ISpecificOperation {
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
-			} catch (CalendarException $e) {
-				throw $e;
+			} catch (CalendarException $calendarException) {
+				throw $calendarException;
 			}
 		}
 	}
@@ -266,6 +272,7 @@ class Operation implements ISpecificOperation {
 			$value = json_encode([$userUri, $calendar->getUri()], JSON_THROW_ON_ERROR);
 			$userCalendars[$value] = $calendar->getDisplayName() ?? $calendar->getUri();
 		}
+
 		return $userCalendars;
 	}
 

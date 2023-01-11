@@ -83,6 +83,7 @@ class RichObjectFactory {
 				// Do nothing
 			}
 		}
+
 		return $object;
 	}
 }

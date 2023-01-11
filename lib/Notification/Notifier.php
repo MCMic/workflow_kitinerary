@@ -59,8 +59,8 @@ class Notifier implements INotifier {
 		if ($notification->getSubject() === 'importDone') {
 			try {
 				return $this->handleImportDone($notification, $languageCode);
-			} catch (\Throwable $t) {
-				throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+			} catch (\Throwable $throwable) {
+				throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
 			}
 		}
 
@@ -78,6 +78,7 @@ class Notifier implements INotifier {
 			$fullPath = $path;
 			[,,, $path] = explode('/', $fullPath, 4);
 		}
+
 		$notification
 			->setRichSubject(
 				$l->t('Imported {event}'),
