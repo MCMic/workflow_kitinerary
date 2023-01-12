@@ -38,26 +38,18 @@ use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
 
 class Provider implements IProvider {
+	/**
+	 * @var string
+	 */
 	public const SUBJECT_IMPORTED = 'imported';
 
-	protected IFactory $languageFactory;
-	protected IURLGenerator $url;
-	protected IManager $activityManager;
-	protected IEventMerger $eventMerger;
-	protected RichObjectFactory $richObjectFactory;
-
 	public function __construct(
-		IFactory $languageFactory,
-		IURLGenerator $url,
-		IManager $activityManager,
-		IEventMerger $eventMerger,
-		RichObjectFactory $richObjectFactory
+		protected IFactory $languageFactory,
+		protected IURLGenerator $url,
+		protected IManager $activityManager,
+		protected IEventMerger $eventMerger,
+		protected RichObjectFactory $richObjectFactory,
 	) {
-		$this->languageFactory = $languageFactory;
-		$this->url = $url;
-		$this->activityManager = $activityManager;
-		$this->eventMerger = $eventMerger;
-		$this->richObjectFactory = $richObjectFactory;
 	}
 
 	/**
@@ -83,9 +75,10 @@ class Provider implements IProvider {
 
 		try {
 			$this->setSubjects($event, $subject);
-		} catch (\Throwable $t) {
-			throw new \InvalidArgumentException($t->getMessage(), 0, $t);
+		} catch (\Throwable $throwable) {
+			throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
 		}
+
 		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
 
 		return $event;
@@ -118,21 +111,14 @@ class Provider implements IProvider {
 	}
 
 	private function getIconNameFromType(string $type): string {
-		switch ($type) {
-			case 'FlightReservation':
-				return 'flight';
-			case 'TrainReservation':
-				return 'longdistancetrain';
-			case 'BusReservation':
-				return 'bus';
-			case 'LodgingReservation':
-				return 'go-home-symbolic';
-			case 'FoodEstablishmentReservation':
-				return 'foodestablishment';
-			case 'RentalCarReservation':
-				return 'car';
-			default:
-				return 'meeting-attending';
-		}
+		return match ($type) {
+			'FlightReservation' => 'flight',
+			'TrainReservation' => 'longdistancetrain',
+			'BusReservation' => 'bus',
+			'LodgingReservation' => 'go-home-symbolic',
+			'FoodEstablishmentReservation' => 'foodestablishment',
+			'RentalCarReservation' => 'car',
+			default => 'meeting-attending',
+		};
 	}
 }

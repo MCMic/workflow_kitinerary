@@ -55,39 +55,18 @@ use Sabre\VObject\Reader;
 use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
-	private IL10N $l;
-	private IURLGenerator $urlGenerator;
-	private BinaryAdapter $binAdapter;
-	private FlatpakAdapter $flatpakAdapter;
-	private SysAdapter $sysAdapter;
-	private LoggerInterface $logger;
-	private IManager $calendarManager;
-	private NotificationManager $notificationManager;
-	private ActivityManager $activityManager;
-	private ?string $userId;
-
 	public function __construct(
-		IL10N $l,
-		IURLGenerator $urlGenerator,
-		BinaryAdapter $binAdapter,
-		FlatpakAdapter $flatpakAdapter,
-		SysAdapter $sysAdapter,
-		LoggerInterface $logger,
-		IManager $calendarManager,
-		NotificationManager $notificationManager,
-		ActivityManager $activityManager,
-		?string $userId
+		private IL10N $l,
+		private IURLGenerator $urlGenerator,
+		private BinaryAdapter $binAdapter,
+		private FlatpakAdapter $flatpakAdapter,
+		private SysAdapter $sysAdapter,
+		private LoggerInterface $logger,
+		private IManager $calendarManager,
+		private NotificationManager $notificationManager,
+		private ActivityManager $activityManager,
+		private ?string $userId,
 	) {
-		$this->l = $l;
-		$this->urlGenerator = $urlGenerator;
-		$this->binAdapter = $binAdapter;
-		$this->flatpakAdapter = $flatpakAdapter;
-		$this->sysAdapter = $sysAdapter;
-		$this->logger = $logger;
-		$this->calendarManager = $calendarManager;
-		$this->notificationManager = $notificationManager;
-		$this->activityManager = $activityManager;
-		$this->userId = $userId;
 	}
 
 	private function findAvailableAdapter(): Adapter {
@@ -95,13 +74,16 @@ class Operation implements ISpecificOperation {
 			$this->sysAdapter->setLogger($this->logger);
 			return $this->sysAdapter;
 		}
+
 		if ($this->binAdapter->isAvailable()) {
 			$this->binAdapter->setLogger($this->logger);
 			return $this->binAdapter;
 		}
+
 		if ($this->flatpakAdapter->isAvailable()) {
 			return $this->flatpakAdapter;
 		}
+
 		throw new \Exception('No kitinerary adapter is available');
 	}
 
@@ -109,6 +91,7 @@ class Operation implements ISpecificOperation {
 		if ($this->userId === null) {
 			throw new UnexpectedValueException($this->l->t('No user ID in session'));
 		}
+
 		$calendars = self::listUserCalendars($this->calendarManager, $this->userId);
 		if (!isset($calendars[$operation])) {
 			throw new UnexpectedValueException($this->l->t('Please select a calendar.'));
@@ -143,21 +126,24 @@ class Operation implements ISpecificOperation {
 			$operation = $match['operation'] ?? false;
 			if ($operation) {
 				// Collect settings of matching rules
-				$operations[] = json_decode($operation);
+				$operations[] = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
 			}
 		}
-		if (empty($operations)) {
+
+		if ($operations === []) {
 			// No rule is matching, we were called for nothing
 			return;
 		}
 
-		if ($eventName === '\OCP\Files::postRename') {
+		/** @psalm-suppress DeprecatedClass */
+		if ($eventName === \OCP\Files::class . '::postRename') {
 			/** @psalm-suppress DeprecatedMethod */
 			[, $node] = $event->getSubject();
 		} else {
 			/** @psalm-suppress DeprecatedMethod */
 			$node = $event->getSubject();
 		}
+
 		/** @var Node $node */
 
 		// '', admin, 'files', 'path/to/file.txt'
@@ -167,7 +153,7 @@ class Operation implements ISpecificOperation {
 		}
 
 		$adapter = $this->findAvailableAdapter();
-		$this->logger->debug('Using adapter '.get_class($adapter));
+		$this->logger->debug('Using adapter '.$adapter::class);
 
 		$itinerary = $adapter->extractIcalFromString($node->getContent());
 
@@ -198,8 +184,8 @@ class Operation implements ISpecificOperation {
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
-			} catch (CalendarException $e) {
-				throw $e;
+			} catch (CalendarException $calendarException) {
+				throw $calendarException;
 			}
 		}
 	}
@@ -216,7 +202,7 @@ class Operation implements ISpecificOperation {
 		/** @var string */
 		$json = $vEvent->{'X-KDE-KITINERARY-RESERVATION'} ?? $vEvent->{'STRUCTURED-DATA'} ?? '[]';
 		/** @var array */
-		$data = json_decode($json, true);
+		$data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
 		return (string)($data[0]['@type'] ?? 'unknown');
 	}
 
@@ -284,9 +270,10 @@ class Operation implements ISpecificOperation {
 		$userUri = self::computePrincipalUri($userId);
 		$calendars = $calendarManager->getCalendarsForPrincipal($userUri);
 		foreach ($calendars as $calendar) {
-			$value = json_encode([$userUri, $calendar->getUri()]);
+			$value = json_encode([$userUri, $calendar->getUri()], JSON_THROW_ON_ERROR);
 			$userCalendars[$value] = $calendar->getDisplayName() ?? $calendar->getUri();
 		}
+
 		return $userCalendars;
 	}
 

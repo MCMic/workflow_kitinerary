@@ -31,10 +31,9 @@ use OCP\Activity\ActivitySettings;
 use OCP\IL10N;
 
 abstract class KitineraryActivitySettings extends ActivitySettings {
-	protected IL10N $l;
-
-	public function __construct(IL10N $l) {
-		$this->l = $l;
+	public function __construct(
+		protected IL10N $l,
+	) {
 	}
 
 	public function getGroupIdentifier(): string {

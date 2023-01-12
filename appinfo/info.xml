@@ -24,7 +24,8 @@
 	<screenshot>https://raw.githubusercontent.com/mcmic/workflow_kitinerary/master/screenshots/calendar.png</screenshot>
 
 	<dependencies>
-		<nextcloud min-version="24" max-version="25" />
+        <php min-version="8.0"/>
+		<nextcloud min-version="25" max-version="25" />
 	</dependencies>
 
 	<activity>
