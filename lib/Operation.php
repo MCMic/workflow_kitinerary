@@ -199,10 +199,16 @@ class Operation implements ISpecificOperation {
 	}
 
 	private function extractTypeFromEvent(VEvent $vEvent): string {
-		/** @var string */
 		$json = $vEvent->{'X-KDE-KITINERARY-RESERVATION'} ?? $vEvent->{'STRUCTURED-DATA'} ?? '[]';
-		/** @var array */
-		$data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+		try {
+			$data = json_decode((string)$json, true, 512, JSON_THROW_ON_ERROR);
+			if (!is_array($data)) {
+				throw new \JsonException('Unexpected type decoded from json in X-KDE-KITINERARY-RESERVATION or STRUCTURED-DATA');
+			}
+		} catch (\JsonException $e) {
+			$this->logger->error($e->getMessage(), ['exception' => $e]);
+			$data = [];
+		}
 		return (string)($data[0]['@type'] ?? 'unknown');
 	}
 
