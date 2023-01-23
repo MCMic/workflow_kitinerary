@@ -170,17 +170,22 @@ class Operation implements ISpecificOperation {
 
 		/** @var VCalendar $vCalendar */
 		$vCalendar = Reader::read($icalEvent);
-		/** @var VEvent $vEvent */
-		$vEvent = $vCalendar->{'VEVENT'};
-		$events = $vEvent->getIterator();
+		/** @var VEvent|null $vEvent */
+		$vEvent = $vCalendar->VEVENT;
+		if ($vEvent instanceof VEvent) {
+			/** @var iterable<VEvent> $events */
+			$events = $vEvent->getIterator();
+		} else {
+			$this->logger->info('No events found in file '.$file->getPath());
+			$events = [];
+		}
 
 		foreach ($events as $event) {
-			/** @var VEvent $event */
 			unset($vCalendar->VEVENT);
 			$vCalendar->add($event);
 
 			try {
-				$eventFilename = $file->getName() . $event->UID . '.ics';
+				$eventFilename = $file->getName() . ($event->UID ?? '') . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
 				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
