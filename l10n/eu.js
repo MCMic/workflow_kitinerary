@@ -1,6 +1,7 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
+    "Imported {event}" : "{event} inportatuta",
     "Kitinerary" : "Kitinerary",
     "Please select a calendar." : "Egutegia hautatu",
     "Untitled event" : "Izenik gabeko gertaera",
