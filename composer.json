@@ -13,7 +13,8 @@
 		"nextcloud/ocp": "dev-master",
 		"vimeo/psalm": "^4.27",
 		"sabre/vobject": "^4.5",
-		"rector/rector": "^0.15.4"
+		"rector/rector": "^0.15.4",
+		"phpunit/phpunit": "^9.5"
 	},
 	"require": {
 		"christophwurst/kitinerary": "^0.2.2",
