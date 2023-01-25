@@ -30,7 +30,8 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"OCP\\": "vendor/nextcloud/ocp/OCP"
+			"OCP\\": "vendor/nextcloud/ocp/OCP",
+			"OCA\\WorkflowKitinerary\\": "lib"
 		}
 	}
 }

@@ -30,6 +30,7 @@ use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowKitinerary\Operation;
+use OCP\Calendar\ICalendar;
 use OCP\Calendar\IManager;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -39,6 +40,7 @@ use Psr\Log\LoggerInterface;
 use PHPUnit\Framework\TestCase;
 
 class OperationTest extends TestCase {
+	private IL10N $l;
 	private IManager $calendarManager;
 	private Operation $operation;
 
@@ -46,9 +48,21 @@ class OperationTest extends TestCase {
 		parent::setUp();
 
 		$this->calendarManager = $this->createMock(IManager::class);
+		$this->l = $this->createMock(IL10N::class);
+
+		$this->l->method('t')
+			->willReturnArgument(0);
+
+		$calendar = $this->createMock(ICalendar::class);
+		$calendar->method('getUri')
+			->willReturn('uri');
+
+		$this->calendarManager->method('getCalendarsForPrincipal')
+			->with('principals/users/fakeuser')
+			->willReturn([$calendar]);
 
 		$this->operation = new Operation(
-			$this->createMock(IL10N::class),
+			$this->l,
 			$this->createMock(IURLGenerator::class),
 			$this->createMock(BinaryAdapter::class),
 			$this->createMock(FlatpakAdapter::class),
@@ -62,6 +76,7 @@ class OperationTest extends TestCase {
 	}
 
 	public function testValidateOperation(): void {
-		$this->operation->validateOperation('name', [], '');
+		$this->calendarManager->expects(self::once())->method('getCalendarsForPrincipal');
+		$this->operation->validateOperation('name', [], json_encode(["principals/users/fakeuser","uri"]));
 	}
 }
