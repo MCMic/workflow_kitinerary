@@ -5,7 +5,8 @@
 		"lint": "find . -name \\*.php -not -path './vendor/*' -not -path './build/*' -print0 | xargs -0 -n1 php -l",
 		"psalm": "psalm",
 		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
-		"psalm:update-baseline": "psalm --threads=1 --update-baseline"
+		"psalm:update-baseline": "psalm --threads=1 --update-baseline",
+		"test:unit": "vendor/bin/phpunit -c phpunit.xml"
 
 	},
 	"require-dev": {
@@ -13,7 +14,8 @@
 		"nextcloud/ocp": "dev-master",
 		"vimeo/psalm": "^4.27",
 		"sabre/vobject": "^4.5",
-		"rector/rector": "^0.15.4"
+		"rector/rector": "^0.15.4",
+		"phpunit/phpunit": "^9.5"
 	},
 	"require": {
 		"christophwurst/kitinerary": "^0.2.2",
@@ -28,7 +30,8 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"OCP\\": "vendor/nextcloud/ocp/OCP"
+			"OCP\\": "vendor/nextcloud/ocp/OCP",
+			"OCA\\WorkflowKitinerary\\": "lib"
 		}
 	}
 }
