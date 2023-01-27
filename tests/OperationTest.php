@@ -30,19 +30,29 @@ use ChristophWurst\KItinerary\Bin\BinaryAdapter;
 use ChristophWurst\KItinerary\Flatpak\FlatpakAdapter;
 use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowKitinerary\Operation;
-use OCP\Calendar\ICalendar;
+use OCP\Activity\IManager as ActivityManager;
+use OCP\Calendar\ICreateFromString;
 use OCP\Calendar\IManager;
+use OCP\EventDispatcher\GenericEvent;
+use OCP\Files\File;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as NotificationManager;
-use OCP\Activity\IManager as ActivityManager;
-use Psr\Log\LoggerInterface;
+use OCP\WorkflowEngine\IRuleMatcher;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 
 class OperationTest extends TestCase {
-	private IL10N $l;
-	private IManager $calendarManager;
+	/** @var IL10N&MockObject */
+	private IL10N|MockObject $l;
+	/** @var IManager&MockObject */
+	private IManager|MockObject $calendarManager;
 	private Operation $operation;
+	/** @var ICreateFromString&MockObject */
+	private ICreateFromString|MockObject $calendar;
+	/** @var FlatpakAdapter&MockObject */
+	private FlatpakAdapter|MockObject $flatpakAdapter;
 
 	protected function setUp(): void {
 		parent::setUp();
@@ -53,20 +63,30 @@ class OperationTest extends TestCase {
 		$this->l->method('t')
 			->willReturnArgument(0);
 
-		$calendar = $this->createMock(ICalendar::class);
-		$calendar->method('getUri')
+		$this->calendar = $this->createMock(ICreateFromString::class);
+		$this->calendar->method('getUri')
 			->willReturn('uri');
 
 		$this->calendarManager->method('getCalendarsForPrincipal')
 			->with('principals/users/fakeuser')
-			->willReturn([$calendar]);
+			->willReturn([$this->calendar]);
+
+		$this->flatpakAdapter = $this->createMock(FlatpakAdapter::class);
+
+		$binaryAdapter = $this->createMock(BinaryAdapter::class);
+		$binaryAdapter->method('isAvailable')
+			->willReturn(false);
+
+		$sysAdapter = $this->createMock(SysAdapter::class);
+		$sysAdapter->method('isAvailable')
+			->willReturn(false);
 
 		$this->operation = new Operation(
 			$this->l,
 			$this->createMock(IURLGenerator::class),
-			$this->createMock(BinaryAdapter::class),
-			$this->createMock(FlatpakAdapter::class),
-			$this->createMock(SysAdapter::class),
+			$binaryAdapter,
+			$this->flatpakAdapter,
+			$sysAdapter,
 			$this->createMock(LoggerInterface::class),
 			$this->calendarManager,
 			$this->createMock(NotificationManager::class),
@@ -78,5 +98,58 @@ class OperationTest extends TestCase {
 	public function testValidateOperation(): void {
 		$this->calendarManager->expects(self::once())->method('getCalendarsForPrincipal');
 		$this->operation->validateOperation('name', [], json_encode(["principals/users/fakeuser","uri"]));
+	}
+
+	public static function dataOnEvent(): array {
+		return [
+			[
+				'/fakeuser/files/path/to/file.pdf',
+				file_get_contents(__DIR__.'/documents/iata-bcbp-demo.pdf'),
+				file_get_contents(__DIR__.'/documents/iata-bcbp-demo.ics'),
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider dataOnEvent
+	 */
+	public function testOnEvent(string $path, string $content, string $icalContent): void {
+		/** @psalm-suppress DeprecatedClass */
+		$eventName = \OCP\Files::class . '::postRename';
+
+		$ruleMatcher = $this->createMock(IRuleMatcher::class);
+		$ruleMatcher->expects(self::once())->method('getFlows')
+			->willReturn([['operation' => json_encode(["principals/users/fakeuser","uri"])]]);
+
+		$node = $this->createMock(File::class);
+		$node->expects(self::atLeastOnce())->method('getId')
+			->willReturn(12);
+		$node->expects(self::exactly(3))->method('getPath')
+			->willReturn($path);
+		$node->expects(self::once())->method('getContent')
+			->willReturn($content);
+		$node->expects(self::atLeastOnce())->method('getName')
+			->willReturn('filename.pdf');
+
+		/** @psalm-suppress DeprecatedClass */
+		$event = $this->createMock(GenericEvent::class);
+		$event->expects(self::once())->method('getSubject')
+			->willReturn(['', $node]);
+
+		$this->flatpakAdapter->expects(self::once())->method('isAvailable')
+			->willReturn(true);
+
+		$this->flatpakAdapter->expects(self::once())->method('extractIcalFromString')
+			->with($content)
+			->willReturn($icalContent);
+
+		$this->calendar->expects(self::once())
+			->method('createFromString')
+			->with(
+				'filename.pdfKIT-9b586afa-432d-4c9e-a320-c45474c7f7de.ics',
+				self::stringContains('X-KDE-KITINERARY-RESERVATION')
+			);
+
+		$this->operation->onEvent($eventName, $event, $ruleMatcher);
 	}
 }
