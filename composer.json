@@ -18,14 +18,15 @@
 		"phpunit/phpunit": "^9.5"
 	},
 	"require": {
+		"php": "^8.0",
 		"christophwurst/kitinerary": "^0.2.2",
-		"christophwurst/kitinerary-bin": "^0.2.5",
+		"christophwurst/kitinerary-bin": "^0.3.0",
 		"christophwurst/kitinerary-flatpak": "^0.2.2",
-		"christophwurst/kitinerary-sys": "^0.1.1"
+		"christophwurst/kitinerary-sys": "^0.2.0"
 	},
 	"config": {
 		"platform": {
-			"php":"7.4"
+			"php":"8.0"
 		}
 	},
 	"autoload-dev": {
