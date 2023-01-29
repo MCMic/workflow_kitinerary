@@ -126,7 +126,11 @@ class Operation implements ISpecificOperation {
 			$operation = $match['operation'] ?? false;
 			if ($operation) {
 				// Collect settings of matching rules
-				$operations[] = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
+				$decodedJson = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
+				assert(is_array($decodedJson));
+				assert(is_string($decodedJson[0]));
+				assert(is_string($decodedJson[1]));
+				$operations[] = $decodedJson;
 			}
 		}
 
@@ -152,13 +156,24 @@ class Operation implements ISpecificOperation {
 			return;
 		}
 
-		$adapter = $this->findAvailableAdapter();
-		$this->logger->debug('Using adapter '.$adapter::class);
+		try {
+			$adapter = $this->findAvailableAdapter();
+			$this->logger->debug('Using adapter '.$adapter::class);
 
-		$itinerary = $adapter->extractIcalFromString($node->getContent());
+			$itinerary = $adapter->extractIcalFromString($node->getContent());
+		} catch (\Exception $e) {
+			foreach ($operations as [$userUri, $calendarUri]) {
+				$this->failureNotification($userUri, $calendarUri, $node, $e->getMessage());
+			}
+			throw $e;
+		}
 
 		foreach ($operations as [$userUri, $calendarUri]) {
-			$this->insertIcalEvent($userUri, $calendarUri, $node, $itinerary);
+			try {
+				$this->insertIcalEvent($userUri, $calendarUri, $node, $itinerary);
+			} catch (\Exception $e) {
+				$this->failureNotification($userUri, $calendarUri, $node, $e->getMessage());
+			}
 		}
 	}
 
@@ -176,8 +191,7 @@ class Operation implements ISpecificOperation {
 			/** @var iterable<VEvent> $events */
 			$events = $vEvent->getIterator();
 		} else {
-			$this->logger->info('No events found in file '.$file->getPath());
-			$events = [];
+			throw new \Exception('No events found in file '.$file->getPath());
 		}
 
 		foreach ($events as $event) {
@@ -187,7 +201,7 @@ class Operation implements ISpecificOperation {
 			try {
 				$eventFilename = $file->getName() . ($event->UID ?? '') . '.ics';
 				$calendar->createFromString($eventFilename, $vCalendar->serialize());
-				$this->successNotication($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
+				$this->successNotification($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $file);
 				$this->successActivity($userUri, $calendarUri, $eventFilename, (string)($event->SUMMARY ?? $this->l->t('Untitled event')), $this->extractTypeFromEvent($event), $file);
 			} catch (CalendarException $calendarException) {
 				throw $calendarException;
@@ -217,7 +231,7 @@ class Operation implements ISpecificOperation {
 		return (string)($data[0]['@type'] ?? 'unknown');
 	}
 
-	private function successNotication(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
+	private function successNotification(string $userUri, string $calendarUri, string $eventId, string $eventSummary, File $file): void {
 		$userId = self::getUserIdFromPrincipalUri($userUri);
 
 		// Send notification to user
@@ -242,6 +256,36 @@ class Operation implements ISpecificOperation {
 				]
 			)
 			->setObject('import', sha1($file->getName().$eventId));
+		$this->notificationManager->notify($notification);
+	}
+
+	private function failureNotification(string $userUri, string $calendarUri, File $file, string $message): void {
+		//TODO translate error messages in those notifications when possible
+		$userId = self::getUserIdFromPrincipalUri($userUri);
+
+		// Send notification to user
+		$notification = $this->notificationManager->createNotification();
+		$notification->setUser($userId)
+			->setApp(Application::APP_ID)
+			->setDateTime(new \DateTime())
+			->setSubject(
+				'importFailed',
+				[
+					'event' => [
+						'principal' => $userUri,
+						'calendarUri' => $calendarUri,
+					],
+					'file' => [
+						'id' => $file->getId(),
+						'name' => $file->getName(),
+						'path' => $file->getPath(),
+					],
+					'error' => [
+						'message' => $message,
+					],
+				]
+			)
+			->setObject('import', sha1($file->getName().$userUri.$calendarUri));
 		$this->notificationManager->notify($notification);
 	}
 

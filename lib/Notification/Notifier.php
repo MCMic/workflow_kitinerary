@@ -62,6 +62,12 @@ class Notifier implements INotifier {
 			} catch (\Throwable $throwable) {
 				throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
 			}
+		} elseif ($notification->getSubject() === 'importFailed') {
+			try {
+				return $this->handleImportFailed($notification, $languageCode);
+			} catch (\Throwable $throwable) {
+				throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
+			}
 		}
 
 		throw new \InvalidArgumentException('Unhandled subject');
@@ -105,6 +111,42 @@ class Notifier implements INotifier {
 					['{file}'],
 					[$subjectParams['file']['name']],
 					$l->t('Successfully imported from {file}')
+				)
+			);
+
+		return $notification;
+	}
+
+	public function handleImportFailed(INotification $notification, string $languageCode): INotification {
+		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
+		/** @var array{file:array{id:int,name:string,path:string},event:array{calendarUri:string},error:array{message:string}} */
+		$subjectParams = $notification->getSubjectParameters();
+
+		$path = $subjectParams['file']['path'];
+		if (str_starts_with($path, '/' . $notification->getUser() . '/files/')) {
+			// Remove /user/files/...
+			$fullPath = $path;
+			[,,, $path] = explode('/', $fullPath, 4);
+		}
+
+		$notification
+			->setRichSubject($l->t('Failed to import events'))
+			->setParsedSubject($l->t('Failed to import events'))
+			->setRichMessage(
+				$l->t('Failed to import events from {file}: {error}'),
+				[
+					'file' => $this->richObjectFactory->fromFileData(
+						$subjectParams['file']['id'],
+						$subjectParams['file']['name'],
+						$path,
+					),
+					'error' => $subjectParams['error']['message'],
+				])
+			->setParsedMessage(
+				str_replace(
+					['{file}', '{error}'],
+					[$subjectParams['file']['name'], $subjectParams['error']['message']],
+					$l->t('Failed to import events from {file}: {error}'),
 				)
 			);
 
