@@ -6,6 +6,8 @@ OC.L10N.register(
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : " </strong>událost</strong> byla naimportována ze souboru",
     "Successfully imported from {file}" : "Úspěšně naimportováno z {file}",
+    "Failed to import events" : "Události se nepodařilo importovat",
+    "Failed to import events from {file}: {error}" : "Nepodařilo se naimportovat události od {file}: {error}",
     "No user ID in session" : "Žádný identifikátor uživatele v relaci",
     "Please select a calendar." : "Vyberte kalendář.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Převádějte cestovní dokumenty na události vkládané do kalendáře.",

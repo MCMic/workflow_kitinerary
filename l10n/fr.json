@@ -4,6 +4,8 @@
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Un <strong>évènement</strong> a été importé depuis un fichier",
     "Successfully imported from {file}" : "Importé avec succès depuis {file}",
+    "Failed to import events" : "Échec de l'import des événements",
+    "Failed to import events from {file}: {error}" : "Échec de l'import des événements à partir du fichier {file}: {error}",
     "No user ID in session" : "Pas d'ID utilisateur dans la session",
     "Please select a calendar." : "Veuillez sélectionner un calendrier.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Converti les documents de voyage en évènements et les insère dans un calendrier.",

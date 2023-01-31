@@ -6,6 +6,8 @@ OC.L10N.register(
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "已從檔案匯入了<strong>事件</strong>",
     "Successfully imported from {file}" : "成功從 {file} 匯入",
+    "Failed to import events" : "匯入事件失敗",
+    "Failed to import events from {file}: {error}" : "無法從 {file} 匯入事件：{error}",
     "No user ID in session" : "工作階段中沒有使用者 ID",
     "Please select a calendar." : "請選取一個行事曆。",
     "Convert travel documents into calendar events and inserts them into a calendar." : "將旅行文件轉換為行事曆事件並將其插入行事曆。",
