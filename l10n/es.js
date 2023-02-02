@@ -6,6 +6,8 @@ OC.L10N.register(
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Un <strong>evento</strong> se importó desde un archivo",
     "Successfully imported from {file}" : "Se importó desde {file} exitósamente",
+    "Failed to import events" : "Fallo al importar eventos",
+    "Failed to import events from {file}: {error}" : "Fallo al importar eventos desde {file}: {error}",
     "No user ID in session" : "No hay ID de usuario en la sesión",
     "Please select a calendar." : "Por favor, selecciona un calendario.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Convierte documentos de viaje en eventos de calendario y los inserta en un calendario.",
