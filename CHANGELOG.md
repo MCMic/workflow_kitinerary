@@ -1,3 +1,12 @@
+# v1.2.0
+
+* Bump dependencies to Nextcloud 25 and PHP 8
+* Modernize code
+* Updated translations
+* Fix json decoding error handling
+* Fix errors when nothing is found for a file
+* Add notification for failed import
+
 # v1.1.0
 
 * Change icon depending on reservation type
