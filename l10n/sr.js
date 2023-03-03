@@ -1,7 +1,19 @@
 OC.L10N.register(
     "workflow_kitinerary",
     {
+    "Imported {event}" : "Увезен је {event}",
+    "Imported {event} from {file}" : "Увезен је {event} из {file}",
+    "Kitinerary" : "Kitinerary",
+    "An <strong>event</strong> has been imported from a file" : "<strong>Догађај</strong> је увезен из фајла",
+    "Successfully imported from {file}" : "Успешно увезено из {file}",
+    "Failed to import events" : "Увоз догађаја није успео",
+    "Failed to import events from {file}: {error}" : "Није успео увоз догађаја из {file}: {error}",
+    "No user ID in session" : "Нема корисничког ID у сесији",
     "Please select a calendar." : "Молимо одаберите календар.",
-    "Untitled event" : "Неименовани догађај"
+    "Convert travel documents into calendar events and inserts them into a calendar." : "Конверзија путних докумената у догађаје календара који се умећу у календар.",
+    "Untitled event" : "Неименовани догађај",
+    "Automated kitinerary parsing" : "Аутоматизовано kitinerary парсирање",
+    "Use kitinerary to parse travel documents into the calendar" : "Користите kitinerary да парсирате путна документа у календар",
+    "An app to trigger automatic conversion of travel documents to calendar events. It uses kitinerary to extract the information and is compatible with the KDE itinerary mobile application." : "Апликација која окида аутоматску конверзију путних докумената у догађаје календара. Користи kitinerary да издвоји информације и компатибилна је са KDE itinerary мобилном апликацијом."
 },
 "nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);");
