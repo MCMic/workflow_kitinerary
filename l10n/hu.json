@@ -4,6 +4,8 @@
     "Kitinerary" : "Kitinerary",
     "An <strong>event</strong> has been imported from a file" : "Egy <strong>esemény</strong> importálva lett egy fájlból",
     "Successfully imported from {file}" : "Sikeresen importálva innen: {file}",
+    "Failed to import events" : "Az események importálása sikertelen",
+    "Failed to import events from {file}: {error}" : "Az események importálása a(z) {file} fájlból sikertelen: {error}",
     "No user ID in session" : "Nincs felhasználóazonosító a munkamenetben",
     "Please select a calendar." : "Válasszon egy naptárat.",
     "Convert travel documents into calendar events and inserts them into a calendar." : "Utazási dokumentumok naptáreseményekké alakítása és beszúrás egy naptárba",
