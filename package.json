@@ -16,7 +16,7 @@
 	},
 	"dependencies": {
 		"@nextcloud/initial-state": "^2.1.0",
-		"@nextcloud/vue": "^7.12.4",
+		"@nextcloud/vue": "^7.12.6",
 		"vue": "^2.7.14"
 	},
 	"browserslist": [
