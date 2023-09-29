@@ -1,3 +1,9 @@
+# v1.3.0
+
+* Bump dependencies
+* Support 26 and 27
+* Updated translations
+
 # v1.2.0
 
 * Bump dependencies to Nextcloud 25 and PHP 8
