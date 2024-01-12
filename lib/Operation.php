@@ -34,6 +34,7 @@ use ChristophWurst\KItinerary\Sys\SysAdapter;
 use OCA\WorkflowEngine\Entity\File as FileEntity;
 use OCA\WorkflowKitinerary\Activity\Provider as ActivityProvider;
 use OCA\WorkflowKitinerary\AppInfo\Application;
+use OCP\Activity\IManager as ActivityManager;
 use OCP\Calendar\Exceptions\CalendarException;
 use OCP\Calendar\ICreateFromString;
 use OCP\Calendar\IManager;
@@ -44,7 +45,6 @@ use OCP\Files\Node;
 use OCP\IL10N;
 use OCP\IURLGenerator;
 use OCP\Notification\IManager as NotificationManager;
-use OCP\Activity\IManager as ActivityManager;
 use OCP\WorkflowEngine\IRuleMatcher;
 use OCP\WorkflowEngine\ISpecificOperation;
 use Psr\Log\LoggerInterface;
@@ -214,7 +214,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	private static function getUserIdFromPrincipalUri(string $userUri): string {
-		return explode('/', $userUri, 3)[2];
+		return explode('/', $userUri, 3)[2] ?? throw new \InvalidArgumentException('Incorrect format for principal URI: '.$userUri);
 	}
 
 	private function extractTypeFromEvent(VEvent $vEvent): string {
