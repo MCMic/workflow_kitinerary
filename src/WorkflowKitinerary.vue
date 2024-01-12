@@ -4,6 +4,7 @@
 		track-by="id"
 		:internal-search="true"
 		label="text"
+		:placeholder="placeholderString"
 		@input="onInput" />
 </template>
 
@@ -21,9 +22,16 @@ export default {
 		},
 	},
 	data() {
+		const options = loadState('workflow_kitinerary', 'userCalendars')
+		let currentValue
+		if (this.value) {
+			currentValue = options[this.value]
+		} else {
+			currentValue = null
+		}
 		return {
-			options: loadState('workflow_kitinerary', 'userCalendars'),
-			currentValue: null,
+			options,
+			currentValue,
 		}
 	},
 	computed: {
@@ -51,11 +59,3 @@ export default {
 	},
 }
 </script>
-
-<style scoped>
-	.multiselect {
-		width: 100%;
-		margin: auto;
-		text-align: center;
-	}
-</style>
