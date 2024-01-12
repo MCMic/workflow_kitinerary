@@ -12,13 +12,13 @@
 	"require-dev": {
 		"nextcloud/coding-standard": "^1.1",
 		"nextcloud/ocp": "dev-master",
-		"vimeo/psalm": "^4.27",
+		"vimeo/psalm": "^5.9",
 		"sabre/vobject": "^4.5",
 		"rector/rector": "^0.15.4",
 		"phpunit/phpunit": "^9.5"
 	},
 	"require": {
-		"php": "^8.0",
+		"php": "^8.0.2",
 		"christophwurst/kitinerary": "^0.2.2",
 		"christophwurst/kitinerary-bin": "^0.3.0",
 		"christophwurst/kitinerary-flatpak": "^0.2.2",
@@ -26,7 +26,7 @@
 	},
 	"config": {
 		"platform": {
-			"php":"8.0"
+			"php": "8.0.2"
 		}
 	},
 	"autoload-dev": {
