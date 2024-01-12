@@ -10,7 +10,7 @@
 
 	},
 	"require-dev": {
-		"nextcloud/coding-standard": "^1.0.0",
+		"nextcloud/coding-standard": "^1.1",
 		"nextcloud/ocp": "dev-master",
 		"vimeo/psalm": "^4.27",
 		"sabre/vobject": "^4.5",
