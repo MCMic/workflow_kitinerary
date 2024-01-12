@@ -1,4 +1,4 @@
-import WorkflowKitinerary from './WorkflowKitinerary'
+import WorkflowKitinerary from './WorkflowKitinerary.vue'
 
 OCA.WorkflowEngine.registerOperator({
 	id: 'OCA\\WorkflowKitinerary\\Operation',

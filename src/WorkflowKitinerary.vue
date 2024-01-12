@@ -1,6 +1,5 @@
 <template>
-	<NcMultiselect
-		v-model="currentValue"
+	<NcMultiselect v-model="currentValue"
 		:options="values"
 		track-by="id"
 		:internal-search="true"
@@ -9,7 +8,7 @@
 </template>
 
 <script>
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect'
+import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
 import { loadState } from '@nextcloud/initial-state'
 
 export default {
