@@ -28,3 +28,4 @@ stylelint.config.js
 psalm.xml
 phpunit.xml
 .pre-commit-config.yaml
+rector.php
