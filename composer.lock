@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "913224dc181470f9df1ec706bcb428e1",
+    "content-hash": "99fc308fbc3041d60c6713572a3aeb61",
     "packages": [
         {
             "name": "christophwurst/kitinerary",
-            "version": "0.2.2",
+            "version": "0.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary.git",
-                "reference": "5e0f19c16af95821d85f4a8da72e571ccc818601"
+                "reference": "0fc585062e4382aacecd8457b5d5609305004437"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/5e0f19c16af95821d85f4a8da72e571ccc818601",
-                "reference": "5e0f19c16af95821d85f4a8da72e571ccc818601",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary/zipball/0fc585062e4382aacecd8457b5d5609305004437",
+                "reference": "0fc585062e4382aacecd8457b5d5609305004437",
                 "shasum": ""
             },
             "require": {
@@ -42,29 +42,29 @@
             "description": "KItinerary adapter",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary/tree/0.2.2"
+                "source": "https://github.com/ChristophWurst/kitinerary/tree/0.2.4"
             },
-            "time": "2022-10-02T14:11:40+00:00"
+            "time": "2023-10-20T16:46:03+00:00"
         },
         {
             "name": "christophwurst/kitinerary-bin",
-            "version": "v0.3.0",
+            "version": "v0.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-bin.git",
-                "reference": "84bf87d5a313f05a6a4511debd2ec350ef58287e"
+                "reference": "7c642f2bcdaec629ec92f6252b1de9566dde374c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/84bf87d5a313f05a6a4511debd2ec350ef58287e",
-                "reference": "84bf87d5a313f05a6a4511debd2ec350ef58287e",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-bin/zipball/7c642f2bcdaec629ec92f6252b1de9566dde374c",
+                "reference": "7c642f2bcdaec629ec92f6252b1de9566dde374c",
                 "shasum": ""
             },
             "require": {
                 "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*",
-                "php": "^7.1 || ^8.0",
-                "psr/log": "^1.1"
+                "php": "^7.4 || ^8.0",
+                "psr/log": "^1.1|^2.0|^3.0"
             },
             "type": "library",
             "autoload": {
@@ -85,27 +85,29 @@
             "description": "KItinerary binary executable",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-bin/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-bin/tree/v0.3.0"
+                "source": "https://github.com/ChristophWurst/kitinerary-bin/tree/v0.4.1"
             },
-            "time": "2023-01-17T09:43:07+00:00"
+            "time": "2023-07-24T13:38:34+00:00"
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
-            "version": "0.2.3",
+            "version": "v0.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
-                "reference": "8eca1209dbc009dd301431373598a108fc920aa6"
+                "reference": "2fd65075e0172946694bb395be81e3d2acc2a210"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/8eca1209dbc009dd301431373598a108fc920aa6",
-                "reference": "8eca1209dbc009dd301431373598a108fc920aa6",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/2fd65075e0172946694bb395be81e3d2acc2a210",
+                "reference": "2fd65075e0172946694bb395be81e3d2acc2a210",
                 "shasum": ""
             },
             "require": {
                 "christophwurst/kitinerary": "^0.2.2",
-                "ext-json": "*"
+                "ext-json": "*",
+                "php": "^7.1 || ^8.0",
+                "psr/log": "^1.1|^2.0|^3.0"
             },
             "type": "library",
             "autoload": {
@@ -126,29 +128,29 @@
             "description": "KItinerary Flatpak binding",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-flatpak/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/0.2.3"
+                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/v0.3.1"
             },
-            "time": "2022-10-03T11:35:21+00:00"
+            "time": "2023-05-22T12:34:58+00:00"
         },
         {
             "name": "christophwurst/kitinerary-sys",
-            "version": "v0.2.0",
+            "version": "v0.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-sys.git",
-                "reference": "e364c3514f270c14c4802df682c0571b412a5fca"
+                "reference": "31693b659a9d63a6100962dd8a73c2e512361f4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/e364c3514f270c14c4802df682c0571b412a5fca",
-                "reference": "e364c3514f270c14c4802df682c0571b412a5fca",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/31693b659a9d63a6100962dd8a73c2e512361f4c",
+                "reference": "31693b659a9d63a6100962dd8a73c2e512361f4c",
                 "shasum": ""
             },
             "require": {
                 "christophwurst/kitinerary": "^0.2.2",
                 "ext-json": "*",
                 "php": "^7.1 || ^8.0",
-                "psr/log": "^1.1"
+                "psr/log": "^1.1|^2.0|^3.0"
             },
             "require-dev": {
                 "phpunit/phpunit": "^9.5"
@@ -172,9 +174,9 @@
             "description": "KItinerary binding for the system package",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-sys/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.2.0"
+                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.2.1"
             },
-            "time": "2023-01-17T09:44:05+00:00"
+            "time": "2023-05-22T15:13:16+00:00"
         },
         {
             "name": "psr/log",
@@ -1834,16 +1836,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "9.5.28",
+            "version": "9.6.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "954ca3113a03bf780d22f07bf055d883ee04b65e"
+                "reference": "810500e92855eba8a7a5319ae913be2da6f957b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/954ca3113a03bf780d22f07bf055d883ee04b65e",
-                "reference": "954ca3113a03bf780d22f07bf055d883ee04b65e",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/810500e92855eba8a7a5319ae913be2da6f957b0",
+                "reference": "810500e92855eba8a7a5319ae913be2da6f957b0",
                 "shasum": ""
             },
             "require": {
@@ -1876,8 +1878,8 @@
                 "sebastian/version": "^3.0.2"
             },
             "suggest": {
-                "ext-soap": "*",
-                "ext-xdebug": "*"
+                "ext-soap": "To be able to generate mocks based on WSDL files",
+                "ext-xdebug": "PHP extension that provides line coverage as well as branch and path coverage"
             },
             "bin": [
                 "phpunit"
@@ -1885,7 +1887,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "9.5-dev"
+                    "dev-master": "9.6-dev"
                 }
             },
             "autoload": {
@@ -1916,7 +1918,8 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.28"
+                "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.6.11"
             },
             "funding": [
                 {
@@ -1932,7 +1935,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-01-14T12:32:24+00:00"
+            "time": "2023-08-19T07:10:56+00:00"
         },
         {
             "name": "psr/container",
