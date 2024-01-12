@@ -1,3 +1,8 @@
+# v1.4.0
+
+* Bump dependencies
+* Support 28
+
 # v1.3.0
 
 * Bump dependencies
