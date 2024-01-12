@@ -1,19 +1,20 @@
 <template>
-	<NcMultiselect v-model="currentValue"
+	<NcSelect v-model="currentValue"
 		:options="values"
 		track-by="id"
 		:internal-search="true"
 		label="text"
+		:placeholder="placeholderString"
 		@input="onInput" />
 </template>
 
 <script>
-import NcMultiselect from '@nextcloud/vue/dist/Components/NcMultiselect.js'
+import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
 import { loadState } from '@nextcloud/initial-state'
 
 export default {
 	name: 'WorkflowKitinerary',
-	components: { NcMultiselect },
+	components: { NcSelect },
 	props: {
 		value: {
 			default: '',
@@ -21,12 +22,23 @@ export default {
 		},
 	},
 	data() {
+		const options = loadState('workflow_kitinerary', 'userCalendars')
+		let currentValue
+		if (this.value) {
+			currentValue = options[this.value]
+		} else {
+			currentValue = null
+		}
 		return {
-			options: loadState('workflow_kitinerary', 'userCalendars'),
-			currentValue: null,
+			options,
+			currentValue,
 		}
 	},
 	computed: {
+		placeholderString() {
+			// TRANSLATORS: Users should select a calendar for a kitinerary workflow action
+			return t('workflow_kitinerary', 'Select a calendar')
+		},
 		values() {
 			return Object.keys(this.options).map(id => {
 				return {
@@ -47,11 +59,3 @@ export default {
 	},
 }
 </script>
-
-<style scoped>
-	.multiselect {
-		width: 100%;
-		margin: auto;
-		text-align: center;
-	}
-</style>
