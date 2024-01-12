@@ -214,7 +214,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	private static function getUserIdFromPrincipalUri(string $userUri): string {
-		return explode('/', $userUri, 3)[2];
+		return explode('/', $userUri, 3)[2] ?? throw new \InvalidArgumentException('Incorrect format for principal URI: '.$userUri);
 	}
 
 	private function extractTypeFromEvent(VEvent $vEvent): string {
