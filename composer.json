@@ -14,7 +14,7 @@
 		"nextcloud/ocp": "dev-master",
 		"vimeo/psalm": "^5.9",
 		"sabre/vobject": "^4.5",
-		"rector/rector": "^0.19",
+		"rector/rector": "^1.0",
 		"phpunit/phpunit": "^9.6"
 	},
 	"require": {
