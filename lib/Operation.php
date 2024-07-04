@@ -124,7 +124,7 @@ class Operation implements ISpecificOperation {
 		$operations = [];
 		foreach ($matches as $match) {
 			$operation = $match['operation'] ?? false;
-			if ($operation) {
+			if ($operation !== false && $operation !== '') {
 				// Collect settings of matching rules
 				$decodedJson = json_decode($operation, null, 512, JSON_THROW_ON_ERROR);
 				assert(is_array($decodedJson));
