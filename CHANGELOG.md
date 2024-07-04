@@ -1,3 +1,9 @@
+# v1.5.0
+
+* Bump dependencies
+* Support 29
+* Fix UI
+
 # v1.4.0
 
 * Bump dependencies
