@@ -1570,16 +1570,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.5",
+            "version": "1.11.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443"
+                "reference": "640410b32995914bde3eed26fa89552f9c2c082f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/490f0ae1c92b082f154681d7849aee776a7c1443",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/640410b32995914bde3eed26fa89552f9c2c082f",
+                "reference": "640410b32995914bde3eed26fa89552f9c2c082f",
                 "shasum": ""
             },
             "require": {
@@ -1624,7 +1624,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-17T15:10:54+00:00"
+            "time": "2024-08-08T09:02:50+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2201,21 +2201,21 @@
         },
         {
             "name": "rector/rector",
-            "version": "1.1.1",
+            "version": "1.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "c930cdb21294f10955ddfc31b720971e8333943d"
+                "reference": "2433e95410aef1b34b15d7f1b6a134365a4ddb39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/c930cdb21294f10955ddfc31b720971e8333943d",
-                "reference": "c930cdb21294f10955ddfc31b720971e8333943d",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/2433e95410aef1b34b15d7f1b6a134365a4ddb39",
+                "reference": "2433e95410aef1b34b15d7f1b6a134365a4ddb39",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.2|^8.0",
-                "phpstan/phpstan": "^1.11"
+                "phpstan/phpstan": "^1.11.9"
             },
             "conflict": {
                 "rector/rector-doctrine": "*",
@@ -2248,7 +2248,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/1.1.1"
+                "source": "https://github.com/rectorphp/rector/tree/1.2.3"
             },
             "funding": [
                 {
@@ -2256,7 +2256,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-21T07:51:17+00:00"
+            "time": "2024-08-12T16:36:46+00:00"
         },
         {
             "name": "sabre/uri",
