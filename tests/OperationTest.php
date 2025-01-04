@@ -44,15 +44,11 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class OperationTest extends TestCase {
-	/** @var IL10N&MockObject */
-	private IL10N|MockObject $l;
-	/** @var IManager&MockObject */
-	private IManager|MockObject $calendarManager;
+	private IL10N&MockObject $l;
+	private IManager&MockObject $calendarManager;
 	private Operation $operation;
-	/** @var ICreateFromString&MockObject */
-	private ICreateFromString|MockObject $calendar;
-	/** @var FlatpakAdapter&MockObject */
-	private FlatpakAdapter|MockObject $flatpakAdapter;
+	private ICreateFromString&MockObject $calendar;
+	private FlatpakAdapter&MockObject $flatpakAdapter;
 
 	protected function setUp(): void {
 		parent::setUp();

@@ -15,7 +15,8 @@
 		"vimeo/psalm": "^5.9",
 		"sabre/vobject": "^4.5",
 		"rector/rector": "^1.0",
-		"phpunit/phpunit": "^9.6"
+		"phpunit/phpunit": "^9.6",
+		"nextcloud/rector": "^0.2.1"
 	},
 	"require": {
 		"php": "^8.0.2",
