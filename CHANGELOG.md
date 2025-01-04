@@ -1,3 +1,9 @@
+# v1.6.0
+
+* Bump dependencies
+* Support 30
+* Drop 25 and 26
+
 # v1.5.0
 
 * Bump dependencies
