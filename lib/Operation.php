@@ -158,7 +158,7 @@ class Operation implements ISpecificOperation {
 
 		try {
 			$adapter = $this->findAvailableAdapter();
-			$this->logger->debug('Using adapter '.$adapter::class);
+			$this->logger->debug('Using adapter ' . $adapter::class);
 
 			$itinerary = $adapter->extractIcalFromString($node->getContent());
 		} catch (\Exception $e) {
@@ -191,7 +191,7 @@ class Operation implements ISpecificOperation {
 			/** @var iterable<VEvent> $events */
 			$events = $vEvent->getIterator();
 		} else {
-			throw new \Exception('No events found in file '.$file->getPath());
+			throw new \Exception('No events found in file ' . $file->getPath());
 		}
 
 		foreach ($events as $event) {
@@ -214,7 +214,7 @@ class Operation implements ISpecificOperation {
 	}
 
 	private static function getUserIdFromPrincipalUri(string $userUri): string {
-		return explode('/', $userUri, 3)[2] ?? throw new \InvalidArgumentException('Incorrect format for principal URI: '.$userUri);
+		return explode('/', $userUri, 3)[2] ?? throw new \InvalidArgumentException('Incorrect format for principal URI: ' . $userUri);
 	}
 
 	private function extractTypeFromEvent(VEvent $vEvent): string {
@@ -255,7 +255,7 @@ class Operation implements ISpecificOperation {
 					],
 				]
 			)
-			->setObject('import', sha1($file->getName().$eventId));
+			->setObject('import', sha1($file->getName() . $eventId));
 		$this->notificationManager->notify($notification);
 	}
 
@@ -285,7 +285,7 @@ class Operation implements ISpecificOperation {
 					],
 				]
 			)
-			->setObject('import', sha1($file->getName().$userUri.$calendarUri));
+			->setObject('import', sha1($file->getName() . $userUri . $calendarUri));
 		$this->notificationManager->notify($notification);
 	}
 

@@ -97,15 +97,15 @@ class OperationTest extends TestCase {
 
 	public function testValidateOperation(): void {
 		$this->calendarManager->expects(self::once())->method('getCalendarsForPrincipal');
-		$this->operation->validateOperation('name', [], json_encode(["principals/users/fakeuser","uri"]));
+		$this->operation->validateOperation('name', [], json_encode(['principals/users/fakeuser','uri']));
 	}
 
 	public static function dataOnEvent(): array {
 		return [
 			[
 				'/fakeuser/files/path/to/file.pdf',
-				file_get_contents(__DIR__.'/documents/iata-bcbp-demo.pdf'),
-				file_get_contents(__DIR__.'/documents/iata-bcbp-demo.ics'),
+				file_get_contents(__DIR__ . '/documents/iata-bcbp-demo.pdf'),
+				file_get_contents(__DIR__ . '/documents/iata-bcbp-demo.ics'),
 			],
 		];
 	}
@@ -119,7 +119,7 @@ class OperationTest extends TestCase {
 
 		$ruleMatcher = $this->createMock(IRuleMatcher::class);
 		$ruleMatcher->expects(self::once())->method('getFlows')
-			->willReturn([['operation' => json_encode(["principals/users/fakeuser","uri"])]]);
+			->willReturn([['operation' => json_encode(['principals/users/fakeuser','uri'])]]);
 
 		$node = $this->createMock(File::class);
 		$node->expects(self::atLeastOnce())->method('getId')
