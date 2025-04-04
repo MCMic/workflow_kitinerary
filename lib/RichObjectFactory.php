@@ -89,7 +89,7 @@ class RichObjectFactory {
 	/**
 	 * @return array{type:'highlight',id:string,name:string,link?:string}
 	 */
-	public function fromHighlightData(string $id, string $name, ?string $link): array {
+	public function fromHighlightData(string $id, string $name, ?string $link = null): array {
 		$object = [
 			'type' => 'highlight',
 			'id' => $id,
