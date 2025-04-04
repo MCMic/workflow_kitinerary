@@ -1,3 +1,10 @@
+# v1.7.0
+
+* Bump dependencies
+* Support 31
+* Fix failed import notifications
+* Drop support for 27, 28 and 29
+
 # v1.6.0
 
 * Bump dependencies
