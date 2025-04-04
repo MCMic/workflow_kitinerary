@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "98cfa0f471f755e00c7382d5f4a894e6",
+    "content-hash": "abb2274e8583fb6bfcae22a0d26a3b0a",
     "packages": [
         {
             "name": "christophwurst/kitinerary",
@@ -4512,7 +4512,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.0.2"
+        "php": "^8.1"
     },
     "platform-dev": {},
     "platform-overrides": {
