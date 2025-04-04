@@ -30,13 +30,18 @@ namespace OCA\WorkflowKitinerary\Notification;
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCA\WorkflowKitinerary\RichObjectFactory;
 use OCP\L10N\IFactory;
+use OCP\Notification\AlreadyProcessedException;
 use OCP\Notification\INotification;
 use OCP\Notification\INotifier;
+use OCP\Notification\InvalidValueException;
+use OCP\Notification\UnknownNotificationException;
+use Psr\Log\LoggerInterface;
 
 class Notifier implements INotifier {
 	public function __construct(
 		protected IFactory $l10nFactory,
 		protected RichObjectFactory $richObjectFactory,
+		private LoggerInterface $logger,
 	) {
 	}
 
@@ -49,30 +54,48 @@ class Notifier implements INotifier {
 	}
 
 	/**
-	 * @throws \InvalidArgumentException When the notification was not prepared by a notifier
+	 * @throws UnknownNotificationException When the notification was not prepared by a notifier
+	 * @throws AlreadyProcessedException When the notification is not needed anymore and should be deleted
 	 */
 	public function prepare(INotification $notification, string $languageCode): INotification {
 		if ($notification->getApp() !== Application::APP_ID) {
-			throw new \InvalidArgumentException('Unhandled app');
+			throw new UnknownNotificationException('Unhandled app');
 		}
 
 		if ($notification->getSubject() === 'importDone') {
 			try {
 				return $this->handleImportDone($notification, $languageCode);
 			} catch (\Throwable $throwable) {
-				throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
+				$this->logger->error(
+					'Ignoring broken notification',
+					[
+						'exception' => $throwable,
+						'parameters' => $notification->getSubjectParameters(),
+					]
+				);
+				throw new AlreadyProcessedException();
 			}
 		} elseif ($notification->getSubject() === 'importFailed') {
 			try {
 				return $this->handleImportFailed($notification, $languageCode);
 			} catch (\Throwable $throwable) {
-				throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
+				$this->logger->error(
+					'Ignoring broken notification',
+					[
+						'exception' => $throwable,
+						'parameters' => $notification->getSubjectParameters(),
+					]
+				);
+				throw new AlreadyProcessedException();
 			}
 		}
 
-		throw new \InvalidArgumentException('Unhandled subject');
+		throw new UnknownNotificationException('Unhandled subject');
 	}
 
+	/**
+	 * @throws InvalidValueException
+	 */
 	public function handleImportDone(INotification $notification, string $languageCode): INotification {
 		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
 		/** @var array{file:array{id:int,name:string,path:string},event:array{id:string,summary:string,calendarUri:string}} */
@@ -96,7 +119,6 @@ class Notifier implements INotifier {
 						$subjectParams['event']['calendarUri']
 					),
 				])
-			->setParsedSubject(str_replace('{event}', $subjectParams['event']['summary'], $l->t('Imported {event}')))
 			->setRichMessage(
 				$l->t('Successfully imported from {file}'),
 				[
@@ -105,18 +127,14 @@ class Notifier implements INotifier {
 						$subjectParams['file']['name'],
 						$path
 					),
-				])
-			->setParsedMessage(
-				str_replace(
-					['{file}'],
-					[$subjectParams['file']['name']],
-					$l->t('Successfully imported from {file}')
-				)
-			);
+				]);
 
 		return $notification;
 	}
 
+	/**
+	 * @throws InvalidValueException
+	 */
 	public function handleImportFailed(INotification $notification, string $languageCode): INotification {
 		$l = $this->l10nFactory->get(Application::APP_ID, $languageCode);
 		/** @var array{file:array{id:int,name:string,path:string},event:array{calendarUri:string},error:array{message:string}} */
@@ -131,7 +149,6 @@ class Notifier implements INotifier {
 
 		$notification
 			->setRichSubject($l->t('Failed to import events'))
-			->setParsedSubject($l->t('Failed to import events'))
 			->setRichMessage(
 				$l->t('Failed to import events from {file}: {error}'),
 				[
@@ -140,15 +157,11 @@ class Notifier implements INotifier {
 						$subjectParams['file']['name'],
 						$path,
 					),
-					'error' => $subjectParams['error']['message'],
-				])
-			->setParsedMessage(
-				str_replace(
-					['{file}', '{error}'],
-					[$subjectParams['file']['name'], $subjectParams['error']['message']],
-					$l->t('Failed to import events from {file}: {error}'),
-				)
-			);
+					'error' => $this->richObjectFactory->fromHighlightData(
+						'error_message',
+						$subjectParams['error']['message'],
+					),
+				]);
 
 		return $notification;
 	}

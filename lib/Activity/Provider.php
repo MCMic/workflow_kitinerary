@@ -30,12 +30,14 @@ namespace OCA\WorkflowKitinerary\Activity;
 
 use OCA\WorkflowKitinerary\AppInfo\Application;
 use OCA\WorkflowKitinerary\RichObjectFactory;
+use OCP\Activity\Exceptions\UnknownActivityException;
 use OCP\Activity\IEvent;
 use OCP\Activity\IEventMerger;
 use OCP\Activity\IManager;
 use OCP\Activity\IProvider;
 use OCP\IURLGenerator;
 use OCP\L10N\IFactory;
+use Psr\Log\LoggerInterface;
 
 class Provider implements IProvider {
 	/**
@@ -49,16 +51,21 @@ class Provider implements IProvider {
 		protected IManager $activityManager,
 		protected IEventMerger $eventMerger,
 		protected RichObjectFactory $richObjectFactory,
+		private LoggerInterface $logger,
 	) {
 	}
 
 	/**
 	 * @param string $language
-	 * @throws \InvalidArgumentException
+	 * @throws UnknownActivityException
 	 */
 	public function parse($language, IEvent $event, ?IEvent $previousEvent = null): IEvent {
-		if ($event->getApp() !== Application::APP_ID || $event->getType() !== 'import') {
-			throw new \InvalidArgumentException();
+		if (
+			$event->getApp() !== Application::APP_ID ||
+			$event->getType() !== 'import' ||
+			$event->getSubject() !== self::SUBJECT_IMPORTED
+		) {
+			throw new UnknownActivityException();
 		}
 
 		$l = $this->languageFactory->get(Application::APP_ID, $language);
@@ -69,14 +76,16 @@ class Provider implements IProvider {
 			$subject = $l->t('Imported {event} from {file}');
 		}
 
-		if ($event->getSubject() !== self::SUBJECT_IMPORTED) {
-			throw new \InvalidArgumentException();
-		}
-
 		try {
 			$this->setSubjects($event, $subject);
 		} catch (\Throwable $throwable) {
-			throw new \InvalidArgumentException($throwable->getMessage(), 0, $throwable);
+			$this->logger->error(
+				'Broken activity event',
+				[
+					'exception' => $throwable,
+					'parameters' => $event->getSubjectParameters(),
+				]
+			);
 		}
 
 		$event = $this->eventMerger->mergeEvents('file', $event, $previousEvent);
@@ -106,8 +115,7 @@ class Provider implements IProvider {
 			),
 		];
 
-		$event->setParsedSubject(str_replace(['{file}', '{event}'], [$parameters['file']['path'],$parameters['event']['name']], $subject))
-			->setRichSubject($subject, $parameters);
+		$event->setRichSubject($subject, $parameters);
 	}
 
 	private function getIconNameFromType(string $type): string {

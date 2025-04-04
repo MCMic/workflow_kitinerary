@@ -6,20 +6,20 @@
 		"psalm": "psalm",
 		"psalm:fix": "psalm --alter --issues=InvalidReturnType,InvalidNullableReturnType,MissingParamType,InvalidFalsableReturnType",
 		"psalm:update-baseline": "psalm --threads=1 --update-baseline",
-		"test:unit": "vendor/bin/phpunit -c phpunit.xml"
+		"test:unit": "vendor/bin/phpunit -c phpunit.xml",
+		"rector": "rector && composer cs:fix"
 
 	},
 	"require-dev": {
 		"nextcloud/coding-standard": "^1.1",
-		"nextcloud/ocp": "dev-master",
+		"nextcloud/ocp": "dev-stable30",
 		"vimeo/psalm": "^5.9",
 		"sabre/vobject": "^4.5",
-		"rector/rector": "^1.0",
 		"phpunit/phpunit": "^9.6",
-		"nextcloud/rector": "^0.3.1"
+		"nextcloud/rector": "^0.4.1"
 	},
 	"require": {
-		"php": "^8.0.2",
+		"php": "^8.1",
 		"christophwurst/kitinerary": "^0.2.4",
 		"christophwurst/kitinerary-bin": "^0.4.1",
 		"christophwurst/kitinerary-flatpak": "^0.3.1",

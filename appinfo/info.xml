@@ -5,7 +5,7 @@
 	<name>Automated kitinerary parsing</name>
 	<summary>Use kitinerary to parse travel documents into the calendar</summary>
 	<description>An app to trigger automatic conversion of travel documents to calendar events. It uses kitinerary to extract the information and is compatible with the KDE itinerary mobile application.</description>
-	<version>1.6.0</version>
+	<version>1.7.0</version>
 	<licence>agpl</licence>
 	<author mail="come.chilliet@nextcloud.com">Côme Chilliet</author>
 	<namespace>WorkflowKitinerary</namespace>
@@ -25,7 +25,7 @@
 
 	<dependencies>
 		<php min-version="8.1"/>
-		<nextcloud min-version="27" max-version="30" />
+		<nextcloud min-version="30" max-version="31" />
 		<backend>caldav</backend>
 	</dependencies>
 
