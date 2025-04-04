@@ -68,8 +68,7 @@ class RichObjectFactory {
 		if ($this->appManager->isEnabledForUser('calendar')) {
 			try {
 				// The calendar app needs to be manually loaded for the routes to be loaded
-				/** @psalm-suppress UndefinedClass */
-				\OC_App::loadApp('calendar');
+				$this->appManager->loadApp('calendar');
 				$objectId = base64_encode('/remote.php/dav/calendars/' . $ownerUid . '/' . $calendarUri . '/' . $id);
 				$link = [
 					'view' => 'dayGridMonth',
@@ -84,6 +83,21 @@ class RichObjectFactory {
 			}
 		}
 
+		return $object;
+	}
+
+	/**
+	 * @return array{type:'highlight',id:string,name:string,link?:string}
+	 */
+	public function fromHighlightData(string $id, string $name, ?string $link): array {
+		$object = [
+			'type' => 'highlight',
+			'id' => $id,
+			'name' => $name,
+		];
+		if ($link !== null) {
+			$object['link'] = $link;
+		}
 		return $object;
 	}
 }
