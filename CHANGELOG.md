@@ -1,3 +1,9 @@
+## 1.7.2
+
+### Fixed
+
+* Stop shipping psr/log to avoid conflicts with core
+
 ## 1.7.1
 
 ### Fixed
