@@ -29,4 +29,3 @@ psalm.xml
 phpunit.xml
 .pre-commit-config.yaml
 rector.php
-/vendor/psr/log
