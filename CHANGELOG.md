@@ -1,3 +1,10 @@
+## 1.7.3
+
+### Fixed
+
+* Ship psr/log again because it is still in autoloader
+* Updated dependencies
+
 ## 1.7.2
 
 ### Fixed
