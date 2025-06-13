@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4147ae87263b94488171d4fa34c326ef",
+    "content-hash": "1a64e70eca339b2ab19647b84b7e6271",
     "packages": [
         {
             "name": "christophwurst/kitinerary",
@@ -91,16 +91,16 @@
         },
         {
             "name": "christophwurst/kitinerary-flatpak",
-            "version": "v0.3.1",
+            "version": "v0.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-flatpak.git",
-                "reference": "2fd65075e0172946694bb395be81e3d2acc2a210"
+                "reference": "06d8369c4da69ed1b2ff24dee003506ee5ecf430"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/2fd65075e0172946694bb395be81e3d2acc2a210",
-                "reference": "2fd65075e0172946694bb395be81e3d2acc2a210",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-flatpak/zipball/06d8369c4da69ed1b2ff24dee003506ee5ecf430",
+                "reference": "06d8369c4da69ed1b2ff24dee003506ee5ecf430",
                 "shasum": ""
             },
             "require": {
@@ -128,22 +128,22 @@
             "description": "KItinerary Flatpak binding",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-flatpak/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/v0.3.1"
+                "source": "https://github.com/ChristophWurst/kitinerary-flatpak/tree/v0.3.2"
             },
-            "time": "2023-05-22T12:34:58+00:00"
+            "time": "2025-06-13T10:53:46+00:00"
         },
         {
             "name": "christophwurst/kitinerary-sys",
-            "version": "v0.2.1",
+            "version": "v0.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ChristophWurst/kitinerary-sys.git",
-                "reference": "31693b659a9d63a6100962dd8a73c2e512361f4c"
+                "reference": "5917f6595c37d481aea6659ad6f1f04ea4958783"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/31693b659a9d63a6100962dd8a73c2e512361f4c",
-                "reference": "31693b659a9d63a6100962dd8a73c2e512361f4c",
+                "url": "https://api.github.com/repos/ChristophWurst/kitinerary-sys/zipball/5917f6595c37d481aea6659ad6f1f04ea4958783",
+                "reference": "5917f6595c37d481aea6659ad6f1f04ea4958783",
                 "shasum": ""
             },
             "require": {
@@ -174,9 +174,9 @@
             "description": "KItinerary binding for the system package",
             "support": {
                 "issues": "https://github.com/ChristophWurst/kitinerary-sys/issues",
-                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.2.1"
+                "source": "https://github.com/ChristophWurst/kitinerary-sys/tree/v0.2.2"
             },
-            "time": "2023-05-22T15:13:16+00:00"
+            "time": "2025-06-13T10:55:59+00:00"
         },
         {
             "name": "psr/log",
@@ -4513,9 +4513,9 @@
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

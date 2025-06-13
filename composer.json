@@ -22,8 +22,8 @@
 		"php": "^8.1",
 		"christophwurst/kitinerary": "^0.2.4",
 		"christophwurst/kitinerary-bin": "^0.4.1",
-		"christophwurst/kitinerary-flatpak": "^0.3.1",
-		"christophwurst/kitinerary-sys": "^0.2.1"
+		"christophwurst/kitinerary-flatpak": "^0.3.2",
+		"christophwurst/kitinerary-sys": "^0.2.2"
 	},
 	"config": {
 		"platform": {
