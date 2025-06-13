@@ -1,3 +1,13 @@
+## 1.8.0
+
+### Fixed
+
+* Bump psr/log to 3.0.2 to match Nextcloud 31 version
+
+### Removed
+
+* Drop support for Nextcloud 30
+
 ## 1.7.3
 
 ### Fixed
