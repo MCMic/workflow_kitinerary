@@ -61,9 +61,9 @@ class Provider implements IProvider {
 	 */
 	public function parse($language, IEvent $event, ?IEvent $previousEvent = null): IEvent {
 		if (
-			$event->getApp() !== Application::APP_ID ||
-			$event->getType() !== 'import' ||
-			$event->getSubject() !== self::SUBJECT_IMPORTED
+			$event->getApp() !== Application::APP_ID
+			|| $event->getType() !== 'import'
+			|| $event->getSubject() !== self::SUBJECT_IMPORTED
 		) {
 			throw new UnknownActivityException();
 		}
