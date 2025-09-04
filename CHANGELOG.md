@@ -1,4 +1,18 @@
+## 1.8.1
+
+### Added
+
+* Support Nextcloud 32
+
+### Fixed
+
+* Use web component for workflow config
+
 ## 1.8.0
+
+### Added
+
+* Support Nextcloud 31
 
 ### Fixed
 
