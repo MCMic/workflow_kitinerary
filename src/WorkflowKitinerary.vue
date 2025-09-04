@@ -16,28 +16,29 @@ export default {
 	name: 'WorkflowKitinerary',
 	components: { NcSelect },
 	props: {
-		value: {
+		modelValue: {
 			default: '',
 			type: String,
 		},
 	},
+	emits: ['update:model-value'],
 	data() {
 		const options = loadState('workflow_kitinerary', 'userCalendars')
-		let currentValue
-		if (this.value) {
-			currentValue = options[this.value]
-		} else {
-			currentValue = null
-		}
 		return {
 			options,
-			currentValue,
 		}
 	},
 	computed: {
 		placeholderString() {
 			// TRANSLATORS: Users should select a calendar for a kitinerary workflow action
 			return t('workflow_kitinerary', 'Select a calendar')
+		},
+		currentValue() {
+			if (this.modelValue) {
+				return this.options[this.modelValue]
+			} else {
+				return null
+			}
 		},
 		values() {
 			return Object.keys(this.options).map(id => {
@@ -50,10 +51,10 @@ export default {
 	},
 	methods: {
 		onInput(newValue) {
-			// when clicking on the an already selected item, we get null
+			// when clicking on the already selected item, we get null
 			// this avoids unselecting an item
 			if (newValue !== null) {
-				this.$emit('input', newValue.id)
+				this.$emit('update:model-value', newValue.id)
 			}
 		},
 	},
