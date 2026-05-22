@@ -41,7 +41,7 @@ class Notifier implements INotifier {
 	public function __construct(
 		protected IFactory $l10nFactory,
 		protected RichObjectFactory $richObjectFactory,
-		private LoggerInterface $logger,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

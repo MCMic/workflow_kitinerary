@@ -56,16 +56,16 @@ use UnexpectedValueException;
 
 class Operation implements ISpecificOperation {
 	public function __construct(
-		private IL10N $l,
-		private IURLGenerator $urlGenerator,
-		private BinaryAdapter $binAdapter,
-		private FlatpakAdapter $flatpakAdapter,
-		private SysAdapter $sysAdapter,
-		private LoggerInterface $logger,
-		private IManager $calendarManager,
-		private NotificationManager $notificationManager,
-		private ActivityManager $activityManager,
-		private ?string $userId,
+		private readonly IL10N $l,
+		private readonly IURLGenerator $urlGenerator,
+		private readonly BinaryAdapter $binAdapter,
+		private readonly FlatpakAdapter $flatpakAdapter,
+		private readonly SysAdapter $sysAdapter,
+		private readonly LoggerInterface $logger,
+		private readonly IManager $calendarManager,
+		private readonly NotificationManager $notificationManager,
+		private readonly ActivityManager $activityManager,
+		private readonly ?string $userId,
 	) {
 	}
 
