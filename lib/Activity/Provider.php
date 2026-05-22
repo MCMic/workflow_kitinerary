@@ -51,7 +51,7 @@ class Provider implements IProvider {
 		protected IManager $activityManager,
 		protected IEventMerger $eventMerger,
 		protected RichObjectFactory $richObjectFactory,
-		private LoggerInterface $logger,
+		private readonly LoggerInterface $logger,
 	) {
 	}
 

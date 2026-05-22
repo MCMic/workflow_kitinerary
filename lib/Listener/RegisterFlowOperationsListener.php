@@ -42,10 +42,10 @@ use Psr\Container\ContainerInterface;
  */
 class RegisterFlowOperationsListener implements IEventListener {
 	public function __construct(
-		private ContainerInterface $container,
-		private IInitialState $initialState,
-		private IManager $calendarManager,
-		private ?string $userId,
+		private readonly ContainerInterface $container,
+		private readonly IInitialState $initialState,
+		private readonly IManager $calendarManager,
+		private readonly ?string $userId,
 	) {
 	}
 
