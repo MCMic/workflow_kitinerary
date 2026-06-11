@@ -1,3 +1,10 @@
+## 1.9.0
+
+### Added
+
+* Support Nextcloud 34 and 33
+* Migrated to vue 3
+
 ## 1.8.1
 
 ### Added
