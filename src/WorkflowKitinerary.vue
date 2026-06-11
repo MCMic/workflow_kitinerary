@@ -5,11 +5,11 @@
 		:internal-search="true"
 		label="text"
 		:placeholder="placeholderString"
-		@input="onInput" />
+		@update:model-value="onInput" />
 </template>
 
 <script>
-import NcSelect from '@nextcloud/vue/dist/Components/NcSelect.js'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { loadState } from '@nextcloud/initial-state'
 
 export default {
@@ -21,7 +21,7 @@ export default {
 			type: String,
 		},
 	},
-	emits: ['update:model-value'],
+	emits: ['update:modelValue'],
 	data() {
 		const options = loadState('workflow_kitinerary', 'userCalendars')
 		return {
@@ -54,7 +54,7 @@ export default {
 			// when clicking on the already selected item, we get null
 			// this avoids unselecting an item
 			if (newValue !== null) {
-				this.$emit('update:model-value', newValue.id)
+				this.$emit('update:modelValue', newValue.id)
 			}
 		},
 	},
