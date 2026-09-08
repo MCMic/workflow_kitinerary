@@ -114,13 +114,6 @@ jobs:
         with:
           files: apps/${{ env.APP_NAME }}/composer.json
 
-      - name: Remove nextcloud/ocp
-        # Only run if phpunit config file exists
-        if: steps.check_composer.outputs.files_exists == 'true'
-        working-directory: apps/${{ env.APP_NAME }}
-        run: |
-          composer remove nextcloud/ocp --dev --no-scripts
-
       - name: Install composer dependencies
         uses: ramsey/composer-install@65e4f84970763564f46a70b8a54b90d033b3bdda # 4.0.0
         with:
