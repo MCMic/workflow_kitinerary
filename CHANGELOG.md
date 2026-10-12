@@ -1,3 +1,9 @@
+## 1.9.1
+
+### Added
+
+* Support Nextcloud 35
+
 ## 1.9.0
 
 ### Added
