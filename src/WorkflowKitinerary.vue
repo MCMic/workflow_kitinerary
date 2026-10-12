@@ -1,16 +1,17 @@
 <template>
-	<NcSelect v-model="currentValue"
+	<NcSelect
+		v-model="currentValue"
 		:options="values"
-		track-by="id"
-		:internal-search="true"
+		trackBy="id"
+		:internalSearch="true"
 		label="text"
 		:placeholder="placeholderString"
-		@update:model-value="onInput" />
+		@update:modelValue="onInput" />
 </template>
 
 <script>
-import NcSelect from '@nextcloud/vue/components/NcSelect'
 import { loadState } from '@nextcloud/initial-state'
+import NcSelect from '@nextcloud/vue/components/NcSelect'
 
 export default {
 	name: 'WorkflowKitinerary',
@@ -21,6 +22,7 @@ export default {
 			type: String,
 		},
 	},
+
 	emits: ['update:modelValue'],
 	data() {
 		const options = loadState('workflow_kitinerary', 'userCalendars')
@@ -28,11 +30,13 @@ export default {
 			options,
 		}
 	},
+
 	computed: {
 		placeholderString() {
 			// TRANSLATORS: Users should select a calendar for a kitinerary workflow action
 			return t('workflow_kitinerary', 'Select a calendar')
 		},
+
 		currentValue() {
 			if (this.modelValue) {
 				return this.options[this.modelValue]
@@ -40,8 +44,9 @@ export default {
 				return null
 			}
 		},
+
 		values() {
-			return Object.keys(this.options).map(id => {
+			return Object.keys(this.options).map((id) => {
 				return {
 					id,
 					text: this.options[id],
@@ -49,6 +54,7 @@ export default {
 			})
 		},
 	},
+
 	methods: {
 		onInput(newValue) {
 			// when clicking on the already selected item, we get null

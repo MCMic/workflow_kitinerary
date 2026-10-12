@@ -1,5 +1,4 @@
 import { defineCustomElement } from 'vue'
-
 import WorkflowKitinerary from './WorkflowKitinerary.vue'
 
 const FlowKItineraryComponent = defineCustomElement(WorkflowKitinerary, { shadowRoot: false })
